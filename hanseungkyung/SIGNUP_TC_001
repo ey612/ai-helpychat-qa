@@ -1,0 +1,113 @@
+# test_signup.py
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+
+
+URL = "https://qaproject.elice.io/ai-helpy-chat"
+
+TEST_EMAIL = "test001@example.com"
+TEST_PASSWORD = "Abc!1234"
+TEST_NAME = "홍길동"
+
+
+def test_signup():
+    # 1. 브라우저 실행
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    wait = WebDriverWait(driver, 10)
+
+    try:
+        # 1. 로그인 페이지 접속
+        driver.get(URL)
+
+        # (필요하면) 로그인 페이지로 이동하는 버튼 클릭
+        # 로그인 / Login 등의 텍스트를 가진 버튼
+        try:
+            login_btn = wait.until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//a[contains(.,'로그인') or contains(.,'Login')]"
+                               " | //button[contains(.,'로그인') or contains(.,'Login')]")
+                )
+            )
+            login_btn.click()
+        except Exception:
+            # 이미 로그인 페이지이면 그냥 넘어감
+            pass
+
+        # 2. 회원가입 클릭
+        signup_btn = wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//a[contains(.,'회원가입') or contains(.,'Sign up') or contains(.,'가입하기')]"
+                           " | //button[contains(.,'회원가입') or contains(.,'Sign up') or contains(.,'가입하기')]")
+            )
+        )
+        signup_btn.click()
+
+        # 3. 이메일로 가입하기 클릭 (있을 경우)
+        try:
+            email_signup_btn = wait.until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//*[contains(.,'이메일로 가입') or contains(.,'Email')]")
+                )
+            )
+            email_signup_btn.click()
+        except Exception:
+            # 버튼이 없다면 이메일 직접 입력 페이지라고 가정
+            pass
+
+        # 4. 이메일 / 비밀번호 / 이름 입력
+        email_input = wait.until(
+            EC.visibility_of_element_located(
+                (By.CSS_SELECTOR, "input[type='email'], input[name*='email']")
+            )
+        )
+        password_input = driver.find_element(
+            By.CSS_SELECTOR, "input[type='password'], input[name*='password']"
+        )
+        name_input = driver.find_element(
+            By.CSS_SELECTOR, "input[name*='name'], input[placeholder*='이름']"
+        )
+
+        email_input.clear()
+        email_input.send_keys(TEST_EMAIL)
+
+        password_input.clear()
+        password_input.send_keys(TEST_PASSWORD)
+
+        name_input.clear()
+        name_input.send_keys(TEST_NAME)
+
+        # 5. 필수 약관 체크 (모든 체크박스 클릭하는 예시)
+        checkboxes = driver.find_elements(By.CSS_SELECTOR, "input[type='checkbox']")
+        for cb in checkboxes:
+            if not cb.is_selected():
+                cb.click()
+
+        # 6. 회원가입 버튼 클릭
+        final_signup_btn = wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//button[contains(.,'회원가입') or contains(.,'가입하기') "
+                           "or contains(.,'Sign up')]")
+            )
+        )
+        final_signup_btn.click()
+
+        # 예상 결과: 회원가입 성공 후 로그인 페이지 또는 메인 화면으로 이동
+        # → URL이 회원가입 페이지가 아닌지, 또는 특정 요소가 보이는지로 확인
+        wait.until(EC.url_changes(driver.current_url))
+        current_url = driver.current_url
+
+        assert "signup" not in current_url.lower(), "아직 회원가입 페이지에 머물고 있음(실패 가능성)."
+
+        # 로그인/메인 화면에만 있는 요소 예시 (서비스 보고 적절히 수정)
+        # 예: '로그인' 제목이나 '채팅 시작' 버튼 등
+        # wait.until(
+        #     EC.visibility_of_element_located(
+        #         (By.XPATH, "//*[contains(.,'로그인') or contains(.,'채팅 시작')]")
+        #     )
+        # )
+
+    finally:
+        driver.quit()
