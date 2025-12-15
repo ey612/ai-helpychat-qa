@@ -9,7 +9,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 
-#[LANG_TC_002] 언어 변경 후 로그아웃 뒤 재로그인 했을 때 이전에 선택했던 언어 설정이 유지되는지 확인
+#[LANG_TC_002] 언어 변경 후 재로그인 시 선택한 언어 설정이 유지되는지 확인
 def test_language_setting_persists_after_relogin():
     
     driver = setup_driver(EMAIL, PW)

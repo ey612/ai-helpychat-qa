@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
-# [LANG_TC_001] 프로필 메뉴에서 [언어 설정] 클릭 시, 지원되는 언어 목록이 정상적으로 표시되는지 확인
+# [LANG_TC_001] 프로필 메뉴에서 언어 설정 클릭 시 지원 언어 목록이 표시되는지 확인
 def test_language_menu_shows_supported_languages():
     
     #1. 로그인

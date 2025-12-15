@@ -1,6 +1,5 @@
 import time
 import os
-import pytest
 from src.config.config import *
 from src.utils.helpers import login, setup_driver, logout
 from selenium.webdriver.common.by import By
@@ -9,9 +8,9 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# [IMG_MDL_TC_002] 미지원 확장자 이미지 업로드 시 오류 메시지가 표시되는지 확인
+# [DOC_MDL_TC_001] 지원 확장자 문서가 정상 업로드되는지 확인
 
-def test_02_invalid_image_shows_error() :
+def test_document_upload_valid_extension():
      # 1. 로그인
     driver = setup_driver(EMAIL, PW)
     
@@ -38,7 +37,7 @@ def test_02_invalid_image_shows_error() :
     
     # 업로드 할 이미지 경로
     print("업로드 할 이미지 경로")
-    relative_file_path = '../../src/resources/asserts/images/fakeimage_txt.jpg'
+    relative_file_path = '../../src/resources/asserts/files/test_normal.pdf'
     
     # current_dir 은 'tests' 폴더 경로
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -64,6 +63,7 @@ def test_02_invalid_image_shows_error() :
     # ========= 파일이 실제로 있는지 확인 ========= 
     
     # 파일 업로드
+    print("파일 업로드 시도 중")
     file_input_element = wait.until(
     EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
     )
@@ -71,41 +71,19 @@ def test_02_invalid_image_shows_error() :
     file_input_element.send_keys(file_path)
     time.sleep(5)
     
+    # 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
     
-    # 파일 첨부 실패 여부 확인
+    wait.until(
+        EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
+    )
+    print("파일 카드가 나타남")
     
-    try :
-        
-        print("파일 미리보기 확인 중")
-        wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
-        )
-        print("테스트 실패: 파일 미리보기 나타남(나타나지 않아야 함)")
-        pytest.fail("지원하지 않는 파일의 미리보기가 나타남")
-        
-    except TimeoutException:
-        print("테스트 통과: 미리보기가 나타나지 않음")
+    # 추가 안정화 대기
+    time.sleep(3)  
     
+    # 테스트 성공 여부 확인
+    uploaded_image = driver.find_element(By.XPATH, f"//span[text()='{file_name}']")
+    assert uploaded_image.is_displayed(), "업로드된 파일 카드가 화면에 나타나지 않았습니다."
     
-    
-    # 업로드 실패 후 오류 메시지가 뜨는지 확인
-    try:
-        # alert가 뜰 때까지 최대 5초 대기
-        print("alert 대기 중")
-        WebDriverWait(driver, 5).until(EC.alert_is_present())
-        alert = driver.switch_to.alert
-        alert_text = alert.text
-        print(f"alert 메시지: {alert_text}")
-        alert.accept()
-        
-        # alert가 나타났으면 성공
-        assert "지원하지 않는" in alert_text or "오류" in alert_text or "실패" in alert_text
-        print("테스트 통과: alert 정상적으로 표시됨")
-        
-    except TimeoutException:
-        # alert가 안 뜨면 fail
-        print("테스트 실패: alert 표시 되지 않음")
-        pytest.fail("업로드 실패 시 alert 메시지가 표시되지 않음")
-        
-    finally:
-        driver.quit()
+  
+    print("== 파일 업로드 완료 ==")

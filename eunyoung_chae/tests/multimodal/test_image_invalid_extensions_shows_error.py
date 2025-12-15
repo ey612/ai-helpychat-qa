@@ -1,5 +1,6 @@
 import time
 import os
+import pytest
 from src.config.config import *
 from src.utils.helpers import login, setup_driver, logout
 from selenium.webdriver.common.by import By
@@ -7,9 +8,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
+# [IMG_MDL_TC_002] 미지원 확장자 이미지 업로드 시 에러 메시지가 표시되는지 확인
 
-#[DOC_MDL_TC_001] 지원 확장자 문서가 정상 업로드되는지 확인
-def test_upload_document_valid_extensions():
+def test_image_invalid_extensions_shows_error() :
+    
      # 1. 로그인
     driver = setup_driver(EMAIL, PW)
     
@@ -36,12 +38,12 @@ def test_upload_document_valid_extensions():
     
     # 업로드 할 이미지 경로
     print("업로드 할 이미지 경로")
-    relative_file_path = '../../src/resources/asserts/files/DOC_MDL_TC_001.pdf'
+    relative_file_path = '../../src/resources/asserts/images/test_fail.svg'
     
     # current_dir 은 'tests' 폴더 경로
     current_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # 'tests/data/elice.png' 합치기
+    # 경로 합치는 중
     combined_path = os.path.join(current_dir, relative_file_path)
     
     # 최종 이미지 경로 (컴퓨터는 이 경로를 보고 찾아 감) 
@@ -62,27 +64,46 @@ def test_upload_document_valid_extensions():
     # ========= 파일이 실제로 있는지 확인 ========= 
     
     # 파일 업로드
-    print("파일 업로드 시도 중")
     file_input_element = wait.until(
     EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
     )
-    #file_input_element = driver.find_element(By.CSS_SELECTOR, 'input[type="file"]')
+
     file_input_element.send_keys(file_path)
     time.sleep(5)
     
-    # 파일 첨부 성공 여부 확인
+    # 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
     
-    wait.until(
-        EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
-    )
-    print("파일 미리보기 나타남")
+    try :
+        
+        print("파일 미리보기 확인 중")
+        wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+        )
+        pytest.fail("지원하지 않는 확장자의 이미지 파일 업로드 시 미리보기가 표시되면 안 됩니다.")
+        
+    except TimeoutException:
+        # 미리보기가 나타나지 않으면 성공
+        pass
     
-    # 추가 안정화 대기
-    time.sleep(3)  
     
-    # 테스트 성공 여부 확인
-    uploaded_image = driver.find_element(By.XPATH, f"//span[text()='{file_name}']")
-    assert uploaded_image.is_displayed(), "업로드된 파일 미리보기 이미지가 화면에 나타나지 않았습니다."
     
-  
-    print("== 파일 업로드 완료 ==")
+    # 업로드 실패 후 오류 메시지가 뜨는지 확인
+    try:
+        print("오류 메시지 확인 중")
+        alert = wait.until(EC.alert_is_present())
+        alert_text = alert.text
+        print(f"Alert 메시지: {alert_text}")
+        
+        # "지원하지 않는" 문구가 포함되어 있는지 확인
+        assert "지원하지 않는" in alert_text, \
+                f"지원하지 않는 확장자에 대한 오류 메시지가 표시되어야 합니다. (실제 메시지: {alert_text})"
+
+        alert.accept()
+
+    except TimeoutException:
+        pytest.fail(
+            "지원하지 않는 확장자의 이미지 파일 업로드 시 오류 메시지가 표시되어야 합니다."
+        )
+
+    finally:
+        driver.quit()

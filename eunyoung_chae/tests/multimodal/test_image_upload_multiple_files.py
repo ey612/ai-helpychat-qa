@@ -8,9 +8,9 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# [IMG_MDL_TC_004] 여러 이미지 동시 업로드 시 정상 업로드되는지 확인
+# [IMG_MDL_TC_005] 여러 이미지 동시 업로드 시 정상 업로드되는지 확인
 
-def test_upload_multiple_images() :
+def test_image_upload_multiple_files() :
      
      # 1. 로그인
     driver = setup_driver(EMAIL, PW)
@@ -39,8 +39,8 @@ def test_upload_multiple_images() :
     # 업로드 할 파일 목록
     file_names_to_upload = [
         
-        'IMG_MDL_TC_004_1.jpg',
-        'IMG_MDL_TC_004_2.jpg'
+        'test_multi_1.jpg',
+        'test_multi_2.png'
     ]
     
     # current_dir
