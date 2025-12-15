@@ -1,7 +1,7 @@
 import time
 import os
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout
+from src.utils.helpers import login, setup_driver, logout, get_file_path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -37,17 +37,10 @@ def test_document_upload_valid_extension():
     
     # 업로드 할 이미지 경로
     print("업로드 할 이미지 경로")
-    relative_file_path = '../../src/resources/asserts/files/test_normal.pdf'
+    relative_path = '../../src/resources/asserts/files/test_normal.pdf'
     
-    # current_dir 은 'tests' 폴더 경로
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # 'tests/data/elice.png' 합치기
-    combined_path = os.path.join(current_dir, relative_file_path)
-    
-    # 최종 이미지 경로 (컴퓨터는 이 경로를 보고 찾아 감) 
-    file_path = os.path.abspath(combined_path)
-    print(f"계산된 파일 경로: {file_path}")
+    file_path = get_file_path(relative_path)
+    file_name = os.path.basename(file_path) 
     
     # ========= 파일이 실제로 있는지 확인 ========= 
     

@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 import time
+import os
 
 # 로그인 함수
 def login (driver, EMAIL, PW):
@@ -92,3 +93,28 @@ def setup_driver(EMAIL, PW):
     login(driver, EMAIL, PW)
     
     return driver
+
+# 파일 업로드 함수
+
+def get_file_path(relative_path):
+    
+    
+    # current_dir 은 현재 위치
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # 파일 경로 합치기
+    combined_path = os.path.join(current_dir, relative_path)
+    
+    # 최종 이미지 경로 (컴퓨터는 이 경로를 보고 찾아 감) 
+    file_path = os.path.abspath(combined_path)
+    print(f"계산된 파일 경로: {file_path}")
+    
+    file_name = os.path.basename(file_path)
+    print(f"파일명: {file_name}")
+    
+    # 파일 존재 여부 확인
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path}")
+    print(f"파일 존재 확인 완료. 파일 크기: {os.path.getsize(file_path)}bytes")
+    
+    return file_path

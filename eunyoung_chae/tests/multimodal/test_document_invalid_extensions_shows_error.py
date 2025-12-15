@@ -2,7 +2,7 @@ import time
 import os
 import pytest
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout
+from src.utils.helpers import login, setup_driver, logout, get_file_path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -37,28 +37,11 @@ def test_document_invalid_extensions_shows_error() :
     
     # 업로드 할 파일 경로
     print("업로드 할 이미지 경로")
-    relative_file_path = '../../src/resources/asserts/files/test_upload_fail.exe'
+    relative_path = '../../src/resources/asserts/files/test_upload_fail.exe'
     
-    # current_dir 은 'tests' 폴더 경로
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = get_file_path(relative_path)
+    file_name = os.path.basename(file_path) 
     
-    # 경로 합치는 중
-    combined_path = os.path.join(current_dir, relative_file_path)
-    
-    # 최종 파일 경로 (컴퓨터는 이 경로를 보고 찾아 감) 
-    file_path = os.path.abspath(combined_path)
-    print(f"계산된 파일 경로: {file_path}")
-    
-    # ========= 파일이 실제로 있는지 확인 ========= 
-    
-    # 파일명만 추출
-    file_name = os.path.basename(file_path)
-    print(f"파일명: {file_name}")
-    
-    # 파일 존재 여부 확인
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path}")
-    print(f"파일 존재 확인 완료. 파일 크기: {os.path.getsize(file_path)}bytes")
     
     # ========= 파일이 실제로 있는지 확인 ========= 
     

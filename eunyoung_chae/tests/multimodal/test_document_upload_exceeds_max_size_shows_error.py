@@ -2,7 +2,7 @@ import time
 import os
 import pytest
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout
+from src.utils.helpers import login, setup_driver, logout, get_file_path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -28,12 +28,11 @@ def test_document_upload_exceeds_max_size_shows_error():
     time.sleep(5)
     
     # 큰 파일 경로 지정
-    relative_file_path = '../../src/resources/asserts/files/test_doc_51mb.pdf'
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    combined_path = os.path.join(current_dir, relative_file_path)
-    file_path = os.path.abspath(combined_path)
+    relative_path = '../../src/resources/asserts/files/test_doc_51mb.pdf'
+
+    file_path = get_file_path(relative_path)
+    file_name = os.path.basename(file_path) 
     
-    file_name = os.path.basename(file_path)
     print(f"파일명: {file_name}")
     
     if not os.path.exists(file_path):
