@@ -1,7 +1,7 @@
 import time
 import os
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout, get_file_path
+from src.utils.helpers import login, setup_driver, logout, get_file_path, open_file_upload_dialog
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -18,20 +18,7 @@ def test_document_upload_valid_extension():
     wait = WebDriverWait(driver, 10)
     
     # 2. 이미지 업로드 업로드 하기
-    
-    # [+] 버튼 누르기
-    print("[+] 버튼 누르기")
-    plus_icon = driver.find_element(By.CSS_SELECTOR, '[data-testid="plusIcon"]')
-    plus_icon.click()
-    time.sleep(3)
-    print("[+] 버튼 클릭 완료")
-    
-    # [파일 업로드] 버튼 클릭
-    print("[파일 업로드] 버튼 누르기")
-    upload_file_btn = driver.find_element(By.XPATH, "//span[text()='파일 업로드']")
-    upload_file_btn.click()
-    time.sleep(5)
-    print("[파일 업로드] 버튼 클릭 완료")
+    open_file_upload_dialog(driver)
     
     # ========= 파일 경로 지정 =========
     

@@ -118,3 +118,19 @@ def get_file_path(relative_path):
     print(f"파일 존재 확인 완료. 파일 크기: {os.path.getsize(file_path)}bytes")
     
     return file_path
+
+def open_file_upload_dialog(driver):
+    
+        # [+] 버튼 누르기
+    print("[+] 버튼 누르기")
+    plus_icon = driver.find_element(By.CSS_SELECTOR, '[data-testid="plusIcon"]')
+    plus_icon.click()
+    time.sleep(3)
+    print("[+] 버튼 클릭 완료")
+    
+    # [파일 업로드] 버튼 클릭
+    print("[파일 업로드] 버튼 누르기")
+    upload_file_btn = driver.find_element(By.XPATH, "//span[text()='파일 업로드']")
+    upload_file_btn.click()
+    time.sleep(5)
+    print("[파일 업로드] 버튼 클릭 완료")
