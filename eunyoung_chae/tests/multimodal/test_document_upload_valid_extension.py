@@ -33,7 +33,7 @@ def test_document_upload_valid_extension_pdf():
     file_input_element.send_keys(file_path)
     time.sleep(5)
     
-    # 5. 문서 업로드 확인
+    # 5. 문서 파일 업로드 확인
     wait.until(
         EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
     )

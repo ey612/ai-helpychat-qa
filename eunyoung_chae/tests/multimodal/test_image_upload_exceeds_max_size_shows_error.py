@@ -46,7 +46,7 @@ def test_image_upload_exceeds_max_size_shows_error_50mb():
         pass
     
     
-     # 오류 메시지 확인
+     # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     try:
         print("오류 메시지 확인 중")
         alert = wait.until(EC.alert_is_present())
