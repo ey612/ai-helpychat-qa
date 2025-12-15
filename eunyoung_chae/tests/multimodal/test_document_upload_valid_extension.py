@@ -30,12 +30,10 @@ def test_document_upload_valid_extension_pdf():
     file_input_element = wait.until(
     EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
     )
-    #file_input_element = driver.find_element(By.CSS_SELECTOR, 'input[type="file"]')
     file_input_element.send_keys(file_path)
     time.sleep(5)
     
     # 5. 업로드 확인
-    
     wait.until(
         EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
     )
