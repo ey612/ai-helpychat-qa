@@ -67,7 +67,7 @@ def test_image_invalid_extensions_shows_error_svg() :
         
 def test_image_invalid_extensions_shows_error_ico() :
     
-     # 1. 로그인, driver 객체
+    # 1. 로그인, driver 객체
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
