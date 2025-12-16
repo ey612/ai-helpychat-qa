@@ -8,7 +8,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# [IMG-MDL_TC_001] 지원 확장자 이미지가 정상 업로드되는지 확인
+# 지원 확장자 이미지가 정상 업로드되는지 확인
 
 def test_image_upload_valid_extension_jpg():
     

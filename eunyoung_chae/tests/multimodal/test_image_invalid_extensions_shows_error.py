@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
-# [IMG_MDL_TC_002] 미지원 확장자 이미지 업로드 시 에러 메시지가 표시되는지 확인
+# 미지원 확장자 이미지 업로드 시 에러 메시지가 표시되는지 확인
 
 def test_image_invalid_extensions_shows_error_svg() :
     

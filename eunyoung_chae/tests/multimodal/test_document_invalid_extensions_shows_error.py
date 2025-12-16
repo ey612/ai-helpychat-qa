@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
-# [DOC_MDL_TC_002] 미지원 확장자 문서 업로드 시 에러 메시지가 표시되는지 확인
+# 미지원 확장자 문서 업로드 시 에러 메시지가 표시되는지 확인
 
 def test_document_invalid_extensions_shows_error_zip() :
     
@@ -21,7 +21,7 @@ def test_document_invalid_extensions_shows_error_zip() :
     
     # 3. 문서 파일 경로 지정
     print("업로드 할 ZIP 문서 파일 경로")
-    relative_path = '../../src/resources/asserts/files/test_upload_fail.zip'
+    relative_path = '../../src/resources/asserts/files/test_fail.zip'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
@@ -77,7 +77,7 @@ def test_document_invalid_extensions_shows_error_exe() :
     
     # 3. 문서 파일 경로 지정
     print("업로드 할 EXE 문서 파일 경로")
-    relative_path = '../../src/resources/asserts/files/test_upload_fail.exe'
+    relative_path = '../../src/resources/asserts/files/test_fail.exe'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
@@ -133,7 +133,7 @@ def test_document_invalid_extensions_shows_error_mp4() :
     
     # 3. 파일 경로 지정
     print("업로드 할 MP4 영상 파일 경로")
-    relative_path = '../../src/resources/asserts/files/test_upload_fail.exe'
+    relative_path = '../../src/resources/asserts/files/test_fail.exe'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
@@ -177,8 +177,7 @@ def test_document_invalid_extensions_shows_error_mp4() :
         pytest.fail(
             "지원하지 않는 확장자[MP4]의 문서 파일 업로드 시 오류 메시지가 표시되어야 합니다."
         )   
-        
-        
+      
         
         
         
