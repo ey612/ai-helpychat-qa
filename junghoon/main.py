@@ -15,7 +15,7 @@ try:
 
     send_message(driver, "안녕하세요 자동화 테스트입니다.")
     time.sleep(2)
-    send_message(driver, "장문 요약 입니다!!."*80)
+    send_message(driver, "장문 요약 입니다!!."*90)
     time.sleep(2)
     click_regenerate(driver, index=1)
     time.sleep(2)
