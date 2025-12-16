@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from constants import AI_COMPLETE, REGENERATE_BTN
+from junghoon.constants import AI_COMPLETE, REGENERATE_BTN
 
 def click_regenerate(driver, index: int = 0):
     """

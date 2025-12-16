@@ -4,9 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-# -------------------------------------------------------
-#   ⭐ 설정
-# -------------------------------------------------------
 def init_driver():
     driver = webdriver.Chrome()
     driver.get("https://qaproject.elice.io/ai-helpy-chat")
@@ -14,9 +11,6 @@ def init_driver():
     print("1. 홈페이지 접속 완료")
     return driver, wait
 
-# -------------------------------------------------------
-#   ⭐ 로그인
-# -------------------------------------------------------
 def login(driver, wait):
     wait.until(EC.presence_of_element_located((By.NAME, "loginId"))).send_keys(
         "qa3team06@elicer.com"
