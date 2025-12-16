@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from constants import AI_COMPLETE
+from junghoon.constants import AI_COMPLETE
 
 def send_message(driver, message):
     chat = WebDriverWait(driver, 10).until(

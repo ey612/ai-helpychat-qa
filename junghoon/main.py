@@ -1,7 +1,7 @@
 from login import init_driver, login
 from chat_sendmessage import send_message
 from chat_regenerate import click_regenerate
-from chat_navigarion import click_prev_answer, click_next_answer
+from chat_navigation import click_prev_answer, click_next_answer
 from chat_editmessage import click_edit_button, edit_textarea_message
 from selenium import webdriver
 from chat_history import ChatHistoryManager

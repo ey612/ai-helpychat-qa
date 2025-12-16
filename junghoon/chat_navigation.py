@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from constants import AI_COMPLETE, PREV_BTN, NEXT_BTN
+from .constants import AI_COMPLETE, PREV_BTN, NEXT_BTN
 
 def click_prev_answer(driver):
     btn = WebDriverWait(driver, 10).until(
