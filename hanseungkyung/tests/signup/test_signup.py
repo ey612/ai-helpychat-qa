@@ -242,22 +242,29 @@ def test_signup_tc_011_password_no_number(driver):
     email, pw, name = get_signup_inputs(wait)
 
     email.clear(); email.send_keys(unique_email())
-    pw.clear(); pw.send_keys("abcd!skfle")   # 숫자 없음
     name.clear(); name.send_keys("testname")
 
+    # ✅ 눈 아이콘 먼저 클릭 (비밀번호 보이기)
+    eye = wait.until(EC.presence_of_element_located(
+        (By.XPATH, "//input[@type='password']/ancestor::*//button")
+    ))
+    assert pw.get_attribute("type") == "password"
+    eye.click()
+    assert pw.get_attribute("type") == "text"
+
+    # ✅ 비밀번호 입력 (숫자 없음)
+    pw.clear(); pw.send_keys("abcd!skfle")
+
     check_terms_1to3_only(driver, wait)
+    click_submit(wait)
 
-    submit = wait.until(EC.presence_of_element_located((By.XPATH, "//button[@type='submit']")))
-    submit.click()
-
-    # 규칙 오류 문구를 넓게 탐지(숫자/규칙/조합/요구 등)
     rule_xpath = (
         "//*[contains(translate(.,'NUMBERDIGIT','numberdigit'),'number')"
         " or contains(translate(.,'NUMBERDIGIT','numberdigit'),'digit')"
         " or contains(.,'숫자') or contains(.,'규칙') or contains(.,'조합') or contains(.,'포함')]"
     )
-
     WebDriverWait(driver, 7).until(lambda d: d.find_elements(By.XPATH, rule_xpath))
+
 
 
 def test_signup_tc_012_password_no_letter(driver):
@@ -268,14 +275,24 @@ def test_signup_tc_012_password_no_letter(driver):
     open_signup_email_form(driver, wait)
     email, pw, name = get_signup_inputs(wait)
 
-    email.send_keys(unique_email())
-    pw.send_keys("1234!@#")
-    name.send_keys("testname")
+    email.clear(); email.send_keys(unique_email())
+    name.clear(); name.send_keys("testname")
+
+    # ✅ 눈 아이콘 클릭 → 보이기
+    eye = wait.until(EC.presence_of_element_located(
+        (By.XPATH, "//input[@type='password']/ancestor::*//button")
+    ))
+    eye.click()
+    assert pw.get_attribute("type") == "text"
+
+    # ✅ 비밀번호 입력 (영문 없음)
+    pw.clear(); pw.send_keys("1234!@#$")
 
     check_terms_1to3_only(driver, wait)
     click_submit(wait)
 
     assert _has_error(driver, "//*[contains(.,'letter') or contains(.,'영문')]")
+
 
 
 def test_signup_tc_013_password_no_special(driver):
@@ -286,14 +303,24 @@ def test_signup_tc_013_password_no_special(driver):
     open_signup_email_form(driver, wait)
     email, pw, name = get_signup_inputs(wait)
 
-    email.send_keys(unique_email())
-    pw.send_keys("Abcd1234")
-    name.send_keys("testname")
+    email.clear(); email.send_keys(unique_email())
+    name.clear(); name.send_keys("testname")
+
+    # ✅ 눈 아이콘 클릭 → 보이기
+    eye = wait.until(EC.presence_of_element_located(
+        (By.XPATH, "//input[@type='password']/ancestor::*//button")
+    ))
+    eye.click()
+    assert pw.get_attribute("type") == "text"
+
+    # ✅ 비밀번호 입력 (특수문자 없음)
+    pw.clear(); pw.send_keys("abcd1234")
 
     check_terms_1to3_only(driver, wait)
     click_submit(wait)
 
     assert _has_error(driver, "//*[contains(.,'special') or contains(.,'특수')]")
+
 
 
 # =======================
@@ -360,7 +387,7 @@ def test_signup_tc_015_required_terms_not_checked(driver):
 
 
 def test_signup_tc_016_required_terms_checked_success(driver):
-    """SIGNUP_TC_016: 필수 약관 동의 후 가입 성공"""
+    """SIGNUP_TC_016: [Required] 약관 2개만 동의 후 가입 성공"""
     wait = WebDriverWait(driver, 15)
     driver.get(BASE_URL)
 
@@ -371,7 +398,25 @@ def test_signup_tc_016_required_terms_checked_success(driver):
     pw.send_keys("abcd!1234")
     name.send_keys("testname")
 
-    check_terms_1to3_only(driver, wait)
+    # ✅ [Required]가 붙은 약관만 체크 (2개)
+    required_labels = wait.until(EC.presence_of_all_elements_located((
+        By.XPATH,
+        "//*[@id='agreement-contents']//label[contains(normalize-space(.), '[Required]')]"
+    )))
+
+    assert len(required_labels) == 2  # 교차검증: 필수 약관은 2개여야 함
+
+    for label in required_labels:
+        checkbox = label.find_element(By.XPATH, ".//input[@type='checkbox']")
+        if not checkbox.is_selected():
+            label.find_element(
+                By.XPATH, ".//span[contains(@class,'MuiCheckbox-root')]"
+            ).click()
+
+    # 최종 상태 검증
+    for label in required_labels:
+        assert label.find_element(By.XPATH, ".//input[@type='checkbox']").is_selected()
+
     click_submit(wait)
 
     WebDriverWait(driver, 10).until(
@@ -379,6 +424,7 @@ def test_signup_tc_016_required_terms_checked_success(driver):
             (By.XPATH, "//*[contains(.,'Nice to meet you again') or normalize-space(.)='Login']")
         )
     )
+
 
 
 # =======================
