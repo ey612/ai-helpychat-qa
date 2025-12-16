@@ -10,13 +10,13 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 #[LANG_TC_002] 언어 변경 후 재로그인 시 선택한 언어 설정이 유지되는지 확인
-def test_language_setting_persists_after_relogin(logged_in_driver):
+def test_language_setting_persists_after_relogin(driver):
     
-    #driver = setup_driver(EMAIL, PW)
+    driver = setup_driver(EMAIL, PW)
     
     try:
         # 기다려
-        wait = WebDriverWait(logged_in_driver, 10)
+        wait = WebDriverWait(driver, 10)
         
         # 1. 사용자 아이콘 클릭
         personl_con = wait.until(
@@ -53,31 +53,31 @@ def test_language_setting_persists_after_relogin(logged_in_driver):
         print(f"✅ 언어 변경 확인 성공: '{VERIFICATION_TEXT}' 텍스트가 화면에서 확인되었습니다.")
 
         # 5. 새로 고침
-        logged_in_driver.refresh()
+        driver.refresh()
         print("✔️ 페이지를 새로고침했습니다.")
         time.sleep(3)
         
         # 6. 로그아웃
-        logout_successful = logout(logged_in_driver)
+        logout_successful = logout(driver)
         assert logout_successful, "로그아웃 실패했습니다."
         print('✔️ 로그아웃 완료')
         time.sleep(3)
         
         # 7. 재로그인
-        login_pw = logged_in_driver.find_element(By.NAME, 'password')
+        login_pw = driver.find_element(By.NAME, 'password')
         login_pw.send_keys(PW)
         print('비밀번호 입력 완료')
 
         # 로그인 버튼 클릭
-        wait = WebDriverWait(logged_in_driver, 10)
-        login_btn = logged_in_driver.find_element(By.XPATH, '//button[text()="Login"]')
+        wait = WebDriverWait(driver, 10)
+        login_btn = driver.find_element(By.XPATH, '//button[text()="Login"]')
         login_btn.click()
         time.sleep(2)
         print('재로그인 완료')
         
         # 8. 언어 변경 유지 확인
         
-        wait = WebDriverWait(logged_in_driver, 10)
+        wait = WebDriverWait(driver, 10)
         VERIFICATION_TEXT = "Account Management"
         personl_con = wait.until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="PersonIcon"]'))
@@ -91,18 +91,18 @@ def test_language_setting_persists_after_relogin(logged_in_driver):
         )
         print(f"✅ 재로그인 후 언어 유지 확인 성공!")
         
-        logged_in_driver.refresh()
+        driver.refresh()
         print("✔️ 페이지를 새로고침했습니다.")
         time.sleep(3)
         
     finally:
         # 언어 원상복구
-        if logged_in_driver is not None: # 드라이버가 생성되었을 때만 실행
+        if driver is not None: # 드라이버가 생성되었을 때만 실행
             
             try:
                 print("\n== 언어 설정 원상복구 시작 ==")
                 
-                wait = WebDriverWait(logged_in_driver, 10)
+                wait = WebDriverWait(driver, 10)
                 
                 # 사람 아이콘 클릭
                 personl_con = wait.until(
@@ -133,5 +133,5 @@ def test_language_setting_persists_after_relogin(logged_in_driver):
             finally:
                 # 브라우저 종료
                 print('브라우저 종료 중')
-                logged_in_driver.quit()
+                driver.quit()
                 print('✅ 브라우저 종료 완료')

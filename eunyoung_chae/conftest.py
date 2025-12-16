@@ -30,8 +30,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+# from src.pages.login_page import LoginPage
 from src.utils.helpers import login, logout
-from src.config.config import EMAIL, PW 
 import time
 import os
 import pytest
@@ -74,11 +74,3 @@ def driver() :
     '''모든 테스트가 끝난 후 브라우저 창 닫기'''
     print('\n WebDriver 종료 중 ...')
     driver.quit()
-
-
-@pytest.fixture(scope="session")
-def logged_in_driver(driver):
-    '''세션 전체에서 한 번만 로그인'''
-    login(driver, EMAIL, PW)  # ← 기존에 만든 login 함수 호출!
-    print('✔️ 초기 로그인 완료')
-    return driver
