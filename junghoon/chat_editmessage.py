@@ -26,7 +26,7 @@ def click_edit_button(driver):
     )
     driver.execute_script("arguments[0].click();", edit_btn)
 
-    print("✏️ 수정 버튼 클릭")
+    print("✏️ 질문 수정 버튼 클릭")
 
 def edit_textarea_message(driver, new_text):
     textarea = WebDriverWait(driver, 10).until(
