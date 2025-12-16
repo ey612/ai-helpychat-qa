@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
-# 경계값 용량 이미지 업로드 (49MB / 49.9MB)
+# 경계값 용량 이미지 업로드 시 정상 업로드되는지 확인 (49MB) / (49.9MB)
 
 def test_image_upload_boundary_size_49mb_succeeds():
     # 1. 로그인, driver 객체
