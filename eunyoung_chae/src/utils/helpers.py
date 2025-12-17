@@ -120,7 +120,7 @@ def get_file_path(relative_path):
 
 def open_file_upload_dialog(driver):
     
-        # [+] 버튼 누르기
+    # [+] 버튼 누르기
     print("[+] 버튼 누르기")
     plus_icon = driver.find_element(By.CSS_SELECTOR, '[data-testid="plusIcon"]')
     plus_icon.click()
