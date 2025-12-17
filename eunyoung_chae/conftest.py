@@ -62,7 +62,7 @@ def login (driver, EMAIL, PW):
 
 # ================ FIXTURE (드라이버 설정) ======================
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def driver() :
     '''테스트 세션 동안 사용할 Chrome WebDriver 생성 및 종료'''
 
