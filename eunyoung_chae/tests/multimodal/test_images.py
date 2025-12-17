@@ -245,12 +245,11 @@ def test_003_image_upload_exceeds_max_size_shows_error_50mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -300,12 +299,12 @@ def test_003_image_upload_exceeds_max_size_shows_error_50_1mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+            
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
+
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -355,12 +354,11 @@ def test_003_image_upload_exceeds_max_size_shows_error_51mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+            
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -409,12 +407,11 @@ def test_003_image_upload_exceeds_max_size_shows_error_60mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+            
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -660,26 +657,12 @@ def test_007_image_upload_corrupted_header_shows_error():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "손상" in alert_text or "잘못된 형식" in alert_text:
-            print("테스트 통과: 손상되었거나 잘못된 형식을 안내하는 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "손상" in alert_text or "잘못된 형식" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
             
+        print("테스트 통과: 손상되었거나 잘못된 형식을 안내하는 오류 메시지 확인됨")
+        alert.accept()
+        
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
         pytest.fail("손상된 이미지 파일 업로드 시 오류 메시지가 표시되지 않음")
-
-
-
-
-
-
-
-
-
-
-
-
-

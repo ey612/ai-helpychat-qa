@@ -94,12 +94,16 @@ def test_002_document_upload_encrypted_file_shows_error():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "암호화" in alert_text :
-            print("테스트 통과: 암호화 안내 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        
+        assert "암호화" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+            
+        # if "암호화" in alert_text :
+        #     print("테스트 통과: 암호화 안내 오류 메시지 확인됨")
+        #     alert.accept()
+        # else:
+        #     alert.accept()
+        #     pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -401,12 +405,12 @@ def test_005_document_upload_exceeds_max_size_shows_error_50mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+            
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -458,12 +462,11 @@ def test_005_document_upload_exceeds_max_size_shows_error_50_1mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+            
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -515,12 +518,11 @@ def test_005_document_upload_exceeds_max_size_shows_error_51mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+        f"예상과 다른 오류 메시지: {alert_text}"
+        
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -572,12 +574,10 @@ def test_005_document_upload_exceeds_max_size_shows_error_60mb():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "용량" in alert_text or "크기" in alert_text:
-            print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "용량" in alert_text or "크기" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
+        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
+        alert.accept()
             
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
@@ -587,7 +587,7 @@ def test_005_document_upload_exceeds_max_size_shows_error_60mb():
 
 def test_006_document_upload_boundary_size_succeeds_49mb():
     
-     # 1. 로그인, driver 객체
+    # 1. 로그인, driver 객체
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
@@ -624,7 +624,7 @@ def test_006_document_upload_boundary_size_succeeds_49mb():
 
 def test_006_document_upload_boundary_size_succeeds_49_9mb():
     
-         # 1. 로그인, driver 객체
+    # 1. 로그인, driver 객체
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
@@ -663,7 +663,7 @@ def test_006_document_upload_boundary_size_succeeds_49_9mb():
 
 def test_007_document_upload_multiple_files_succeeds():
     
-     # 1. 로그인, driver 객체
+    # 1. 로그인, driver 객체
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
@@ -819,13 +819,12 @@ def test_009_document_upload_corrupted_header_shows_error():
         print(f"Alert 메시지: {alert_text}")
         
         # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        if "손상" or "잘못된 형식" in alert_text :
-            print("테스트 통과: 손상된 파일 안내 오류 메시지 확인됨")
-            alert.accept()
-        else:
-            alert.accept()
-            pytest.fail(f"예상과 다른 오류 메시지: {alert_text}")
+        assert "손상" in alert_text or "잘못된 형식" in alert_text, \
+            f"예상과 다른 오류 메시지: {alert_text}"
             
+        print("테스트 통과: 손상된 파일 안내 오류 메시지 확인됨")
+        alert.accept()
+
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
         pytest.fail("손상된 문서 파일 업로드 시 오류 메시지가 표시되지 않음")
