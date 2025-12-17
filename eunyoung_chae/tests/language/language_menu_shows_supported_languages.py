@@ -1,7 +1,7 @@
 import pytest
 import time
 import re
-from src.pages.login_page import LoginPage
+from src.utils.helpers import *
 from src.config.config import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -15,9 +15,10 @@ def test_language_menu_shows_supported_languages(driver):
     #1. 로그인
     
     # LoginPage 객체 생성
-    login_page = LoginPage(driver)
+    driver = setup_driver(EMAIL, PW)
+    
     # login 메서드 호출(로그인 수행)
-    login_page.login(EMAIL, PW)
+    driver.login(EMAIL, PW)
     print('로그인 완료!')
     
     # 테스트 로직 실행

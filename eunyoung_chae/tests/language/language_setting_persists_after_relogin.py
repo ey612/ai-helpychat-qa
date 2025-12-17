@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 #[LANG_TC_002] 언어 변경 후 재로그인 시 선택한 언어 설정이 유지되는지 확인
-def test_language_setting_persists_after_relogin(driver):
+def test_language_setting_persists_after_relogin():
     
     driver = setup_driver(EMAIL, PW)
     
@@ -90,10 +90,11 @@ def test_language_setting_persists_after_relogin(driver):
             EC.presence_of_element_located((By.XPATH, ACCOUNT_MANAGEMENT_XPATH))
         )
         print(f"✅ 재로그인 후 언어 유지 확인 성공!")
+        assert account_mgmt_element.is_displayed(), "재로그인 후 언어 설정이 유지되지 않았습니다." 
         
         driver.refresh()
         print("✔️ 페이지를 새로고침했습니다.")
-        time.sleep(3)
+        time.sleep(3) 
         
     finally:
         # 언어 원상복구
@@ -129,9 +130,3 @@ def test_language_setting_persists_after_relogin(driver):
             
             except Exception as e:
                 print(f"⚠️ 언어 설정 원상복구 실패: {e}")
-                
-            finally:
-                # 브라우저 종료
-                print('브라우저 종료 중')
-                driver.quit()
-                print('✅ 브라우저 종료 완료')
