@@ -24,16 +24,17 @@ def test_001_image_upload_valid_extension(file_name):
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
-    # 2. 이미지 파일 업로드 하기
+    # 2. 이미지 파일 경로 설정
     print(f"업로드 할 이미지 파일 경로{file_name}")
     relative_path = f'../../src/resources/asserts/images/{file_name}'
     file_path = get_file_path(relative_path)
     
+    # 3. 이미지 파일 업로드
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
-    # 5. 업로드 확인
+    # 4. 업로드 확인
     print(f"{file_name} 이미지 파일 미리보기 확인 중")
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
@@ -64,14 +65,12 @@ def test_002_image_invalid_extensions_shows_error(file_name) :
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
-    # 2. 이미지 파일 업로드 하기
-    open_file_upload_dialog(driver)
-    
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print(f"업로드 할 이미지 파일 경로{file_name}")
     relative_path = f'../../src/resources/asserts/images/{file_name}'
     file_path = get_file_path(relative_path)
     
+    # 3. 이미지 파일 업로드
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
@@ -124,15 +123,12 @@ def test_003_image_upload_exceeds_max_size_shows_error(file_name):
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
-    # 2. 이미지 파일 업로드 하기
-    open_file_upload_dialog(driver)
-    
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print(f"업로드 할 {file_name} 이미지 파일 경로")
     relative_path = f'../../src/resources/asserts/files/{file_name}'
     file_path = get_file_path(relative_path)
     
-     # 4. 이미지 파일 업로드
+     # 3. 이미지 파일 업로드
     print(f"{file_name} 이미지 파일 업로드 중")
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
@@ -183,21 +179,18 @@ def test_004_image_upload_boundary_size_succeeds(file_name):
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
-    # 2. 이미지 파일 업로드 하기
-    open_file_upload_dialog(driver)
-    
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print(f"업로드 할 {file_name} 이미지 파일 경로")
     relative_path = f'../../src/resources/asserts/images/{file_name}'
     file_path = get_file_path(relative_path)
     
-    # 4. 이미지 파일 업로드
+    # 3. 이미지 파일 업로드 하기
     print(f"{file_name} 이미지 파일 업로드 시도 중")
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
-    # 5. 업로드 확인
+    # 4. 업로드 확인
     print(f"{file_name} 이미지 파일 미리보기 확인 중")
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
@@ -252,23 +245,18 @@ def test_006_image_upload_filename_with_special_characters_succeeds():
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
-    # 2. 이미지 파일 업로드 하기
-    upload_page = UploadPage(driver)
-    upload_page.open_file_upload_dialog()
-    
     # 3. 이미지 파일 경로 지정
     print("업로드 할 특수문자 포함된 파일명 이미지 파일 경로")
     relative_path = '../../src/resources/asserts/images/test_한글@#$.jpg'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path)
 
-    
     # 4. 이미지 파일 업로드
-    print("특수문자 포함된 파일명 이미지 파일 업로드 시도 중")
-
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
-    # 5. 업로드 확인
+    # 4. 업로드 확인
     print("특수문자 포함된 파일명 이미지 파일 미리보기 확인 중")
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
@@ -291,18 +279,15 @@ def test_007_image_upload_corrupted_header_shows_error():
     driver = setup_driver(EMAIL, PW)
     wait = WebDriverWait(driver, 10)
     
-    upload_page = UploadPage(driver)
-    upload_page.open_file_upload_dialog()
-    
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print("업로드 할 손상된 이미지 파일 경로")
     relative_path = '../../src/resources/asserts/images/test_corrupted_invalid_header.jpg'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
-     # 4. 이미지 파일 업로드
-    print("손상된 이미지 파일 업로드 중")
-
+    # 3. 이미지 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
     # 이미지 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
