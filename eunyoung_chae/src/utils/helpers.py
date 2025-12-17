@@ -28,7 +28,6 @@ def login (driver, EMAIL, PW):
     login_btn = driver.find_element(By.XPATH, '//button[text()="Login"]')
     login_btn.click()
     time.sleep(2)
-    
 
 # 로그아웃 함수
 def logout (driver):
@@ -99,7 +98,7 @@ def setup_driver(EMAIL, PW):
 def get_file_path(relative_path):
     
     
-    # current_dir 은 현재 위치
+    # current_dir = 현재 위치
     current_dir = os.path.dirname(os.path.abspath(__file__))
     
     # 파일 경로 합치기

@@ -14,7 +14,6 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent
 sys.path.insert(0, str(project_root))
 
-print(f"🔍 Project root: {project_root}")  # ← 디버깅용
 
 # ==========================================================
 # 2. WebDriver 및 Pytest Fixture 코드
@@ -31,7 +30,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from src.utils.helpers import login, logout
-from src.config.config import EMAIL, PW 
 import time
 import os
 import pytest
@@ -41,12 +39,30 @@ import pytest
 WAIT_TIMEOUT = 10 
 # ================ 공통 상수 ======================
 
+def login (driver, EMAIL, PW):
+    
+    # 아이디 입력 필드 찾아 입력
+    print('아이디 입력 중')
+    login_email = driver.find_element(By.CSS_SELECTOR, '[name="loginId"]')
+    login_email.send_keys(EMAIL)
+    print('아이디 입력 완료')
+    
+    
+    # 비밀번호 입력 필드 찾아 입력 
+    print('비밀번호 입력 중')
+    login_pw = driver.find_element(By.CSS_SELECTOR, '[name="password"]')
+    login_pw.send_keys(PW)
+    print('비밀번호 입력 완료')
 
-
+    # 로그인 버튼 클릭
+    
+    login_btn = driver.find_element(By.XPATH, '//button[text()="Login"]')
+    login_btn.click()
+    time.sleep(2)
 
 # ================ FIXTURE (드라이버 설정) ======================
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def driver() :
     '''테스트 세션 동안 사용할 Chrome WebDriver 생성 및 종료'''
 
@@ -74,11 +90,3 @@ def driver() :
     '''모든 테스트가 끝난 후 브라우저 창 닫기'''
     print('\n WebDriver 종료 중 ...')
     driver.quit()
-
-
-@pytest.fixture(scope="session")
-def logged_in_driver(driver):
-    '''세션 전체에서 한 번만 로그인'''
-    login(driver, EMAIL, PW)  # ← 기존에 만든 login 함수 호출!
-    print('✔️ 초기 로그인 완료')
-    return driver
