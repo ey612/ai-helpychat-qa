@@ -3,39 +3,74 @@ from selenium.webdriver.common.by import By
 
 
 class AccountPage:
-    # ✅ 사람 아이콘 버튼: 후보를 여러 개로 둠(안정)
-    AVATAR_BTN_CANDIDATES = [
-        # MUI Avatar 버튼(스샷에 확실히 존재)
-        (By.CSS_SELECTOR, "button.MuiAvatar-root"),
-        # 혹시 IconButton으로 감싸진 경우
-        (By.CSS_SELECTOR, "button.MuiIconButton-root:has(svg)"),
-        # data-testid가 있는 경우(있으면 가장 좋음)
-        (By.XPATH, "//button[.//svg[@data-testid='PersonIcon']]"),
-        (By.XPATH, "//*[@data-testid='PersonIcon']/ancestor::button[1]"),
-    ]
+    # ===== Helpy Chat (qaproject.elice.io) =====
+    # 우측 상단 사람(아바타) 버튼: svg data-testid=PersonIcon 이 들어있음
+    AVATAR_BTN = (
+        By.XPATH,
+        "//button[.//svg[@data-testid='PersonIcon'] "
+        "or contains(@class,'MuiAvatar-root') "
+        "or .//svg[contains(@data-testid,'Person')]]",
+    )
 
-    # 계정관리 메뉴
-    ACCOUNT_MENU_CANDIDATES = [
-        (By.XPATH, "//*[self::li or self::button or self::a][contains(.,'계정관리')]"),
-        (By.XPATH, "//*[self::li or self::button or self::a][contains(.,'계정 관리')]"),
-    ]
+    # 프로필 패널에서 '계정 관리' 클릭 (span 텍스트가 가장 안정적)
+    ACCOUNT_MANAGEMENT_LINK = (
+        By.XPATH,
+        "//span[normalize-space()='계정 관리' or contains(normalize-space(),'계정 관리')]",
+    )
 
-    # 공통 저장 버튼
-    SAVE_BTN = (By.XPATH, "//button[contains(.,'저장')]")
+    # ===== Elice Account (accounts.elice.io) =====
+    # 계정관리 페이지 로딩 확인용 (기본정보/이름 입력창 등)
+    READY = (
+        By.XPATH,
+        "//*[contains(normalize-space(),'기본 정보') or contains(normalize-space(),'계정 관리')]",
+    )
 
-    # 이름 변경
-    NAME_CHANGE_BTN = (By.XPATH, "//*[contains(.,'이름 변경')]")
-    NAME_INPUT = (By.XPATH, "//input[@name='name' or contains(@placeholder,'이름') or @type='text']")
+    # 이름 수정(연필) 버튼: EditOutlinedIcon 사용
+    NAME_EDIT_BTN = (
+        By.XPATH,
+        "//*[normalize-space()='이름']/ancestor::tr[1]//button"
+        "[.//svg[@data-testid='EditOutlinedIcon'] or .//svg[contains(@data-testid,'Edit')]]",
+    )
 
-    # 비밀번호 변경
-    PASSWORD_CHANGE_BTN = (By.XPATH, "//*[contains(.,'비밀번호 변경')]")
-    CURRENT_PW_INPUT = (By.XPATH, "(//input[@type='password'])[1]")
-    NEW_PW_INPUT = (By.XPATH, "(//input[@type='password'])[2]")
-    CONFIRM_PW_INPUT = (By.XPATH, "(//input[@type='password'])[3]")
+    # 이름 입력: 너 스샷에서 name='fullName' 으로 확정
+    NAME_INPUT = (
+        By.CSS_SELECTOR,
+        "input[name='fullName']",
+    )
 
-    # 프로모션 알림 토글
-    PROMOTION_TOGGLE = (By.XPATH, "//*[contains(.,'프로모션')]/following::*[@role='switch' or @type='checkbox'][1]")
+    # 비밀번호 수정(연필) 버튼
+    PASSWORD_EDIT_BTN = (
+        By.XPATH,
+        "//*[normalize-space()='비밀번호']/ancestor::tr[1]//button"
+        "[.//svg[@data-testid='EditOutlinedIcon'] or .//svg[contains(@data-testid,'Edit')]]",
+    )
 
-    # 메시지
-    TOAST = (By.XPATH, "//*[contains(.,'저장') or contains(.,'되었습니다')]")
-    ERROR_MSG = (By.XPATH, "//*[contains(.,'강력') or contains(.,'8자') or contains(.,'특수문자')]")
+    # 기존 비밀번호 input (스샷에서 autocomplete='current-password')
+    CURRENT_PW_INPUT = (
+        By.CSS_SELECTOR,
+        "input[autocomplete='current-password']",
+    )
+
+    # 새 비밀번호 input (보통 autocomplete='new-password')
+    NEW_PW_INPUT = (
+        By.CSS_SELECTOR,
+        "input[autocomplete='new-password']",
+    )
+
+    # 완료 버튼
+    DONE_BTN = (
+        By.XPATH,
+        "//button[normalize-space()='완료']",
+    )
+
+    # 저장 성공 토스트(스샷: Saved successfully.)
+    SAVE_TOAST = (
+        By.XPATH,
+        "//*[contains(normalize-space(),'Saved successfully') or contains(normalize-space(),'저장')]",
+    )
+
+    # 프로모션 알림(마케팅) 토글: input name='marketing' (스샷 확정)
+    PROMO_MARKETING = (
+        By.CSS_SELECTOR,
+        "input[name='marketing']",
+    )
