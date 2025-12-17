@@ -132,7 +132,9 @@ def test_signup_tc_006_name_required(driver):
     click_submit(wait)
 
     v = driver.execute_script("return arguments[0].validationMessage;", name) or ""
+    time.sleep(5)
     assert v or _has_error(driver, "//*[contains(.,'Name') or contains(.,'이름')]")
+    
 
 
 # =======================
