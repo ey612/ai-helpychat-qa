@@ -478,18 +478,3 @@ def test_009_document_upload_corrupted_header_shows_error():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
