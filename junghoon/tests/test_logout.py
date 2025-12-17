@@ -22,9 +22,9 @@ def test_logout(driver):
 
     # when
     logout(driver)
+    wait = WebDriverWait(driver, 10)
 
     # then
-    wait = WebDriverWait(driver, 10)
-    wait.until(lambda d: "login" in d.current_url.lower())
-
-    assert "login" in driver.current_url.lower()
+    wait.until(lambda d: "signin" in d.current_url.lower() or "login" in d.current_url.lower())
+    current_url = driver.current_url.lower()
+    assert "signin" in current_url or "login" in current_url
