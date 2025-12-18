@@ -7,15 +7,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
-
+from src.pages.login_page import LoginPage
+from src.pages.main_page import GnbComponent
 
 # [LANG_TC_001] 프로필 메뉴에서 언어 설정 클릭 시 지원 언어 목록이 표시되는지 확인
-def test_001_language_menu_shows_supported_languages():
+def test_001_language_menu_shows_supported_languages(driver):
     
     #1. 로그인
     
-    # LoginPage 객체 생성
-    driver = setup_driver(EMAIL, PW)
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
     # 테스트 로직 실행
     
@@ -56,14 +57,15 @@ def test_001_language_menu_shows_supported_languages():
     assert test_passed, "모든 언어 항목이 드롭다운에 표시되지 않았습니다."
 
 #[LANG_TC_002] 언어 변경 후 재로그인 시 선택한 언어 설정이 유지되는지 확인
-def test_002_language_setting_persists_after_relogin():
-    
-    driver = setup_driver(EMAIL, PW)
+def test_002_language_setting_persists_after_relogin(driver):
     
     try:
-        # 기다려
-        wait = WebDriverWait(driver, 10)
         
+        # 로그인
+        login_page = LoginPage(driver)
+        login_page.login(PW, EMAIL)
+        
+        wait = WebDriverWait(driver, 10)
         # 1. 사용자 아이콘 클릭
         personl_con = wait.until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="PersonIcon"]'))
@@ -103,24 +105,14 @@ def test_002_language_setting_persists_after_relogin():
         print("✔️ 페이지를 새로고침했습니다.")
         time.sleep(3)
         
-        # 6. 로그아웃
-        logout_successful = logout(driver)
-        assert logout_successful, "로그아웃 실패했습니다."
-        print('✔️ 로그아웃 완료')
-        time.sleep(3)
-        
-        # 7. 재로그인
-        login_pw = driver.find_element(By.NAME, 'password')
-        login_pw.send_keys(PW)
-        print('비밀번호 입력 완료')
+        # 7.로그아웃
+        logout_page = GnbComponent(driver)
+        logout_page.logout()
 
-        # 로그인 버튼 클릭
-        wait = WebDriverWait(driver, 10)
-        login_btn = driver.find_element(By.XPATH, '//button[text()="Login"]')
-        login_btn.click()
+        # 로그인
         time.sleep(2)
-        print('재로그인 완료')
-        
+        login_page.login(PW)
+        time.sleep(2)
         # 8. 언어 변경 유지 확인
         
         wait = WebDriverWait(driver, 10)

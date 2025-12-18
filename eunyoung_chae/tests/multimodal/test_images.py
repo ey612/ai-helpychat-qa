@@ -2,12 +2,14 @@ import time
 import os
 import pytest
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout, get_file_path, open_file_upload_dialog
+from src.utils.helpers import setup_driver, get_file_path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from src.pages.upload_page import UploadPage
+from src.pages.login_page import LoginPage
+from src.pages.main_page import GnbComponent
 
 # [IMG_MDL_TC_001] 지원 확장자 이미지가 정상 업로드되는지 확인
 
@@ -18,23 +20,25 @@ from src.pages.upload_page import UploadPage
         "test_normal.png",
     ]
 )
-def test_001_image_upload_valid_extension(file_name):
+def test_001_image_upload_valid_extension(driver, file_name):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 이미지 파일 업로드 하기
+    # 2. 이미지 파일 경로 설정
     print(f"업로드 할 이미지 파일 경로{file_name}")
     relative_path = f'../../src/resources/asserts/images/{file_name}'
     file_path = get_file_path(relative_path)
     
+    # 3. 이미지 파일 업로드
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
-    # 5. 업로드 확인
+    # 4. 업로드 확인
     print(f"{file_name} 이미지 파일 미리보기 확인 중")
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
     )
@@ -58,20 +62,18 @@ def test_001_image_upload_valid_extension(file_name):
         
     ]
 )
-def test_002_image_invalid_extensions_shows_error(file_name) :
+def test_002_image_invalid_extensions_shows_error(driver, file_name) :
     
-     # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+     # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 이미지 파일 업로드 하기
-    open_file_upload_dialog(driver)
-    
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print(f"업로드 할 이미지 파일 경로{file_name}")
     relative_path = f'../../src/resources/asserts/images/{file_name}'
     file_path = get_file_path(relative_path)
     
+    # 3. 이미지 파일 업로드
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
@@ -81,6 +83,7 @@ def test_002_image_invalid_extensions_shows_error(file_name) :
     try :
         
         print(f"{file_name} 이미지 파일 미리보기 확인 중")
+        wait = WebDriverWait(driver, 10)
         wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )
@@ -118,21 +121,19 @@ def test_002_image_invalid_extensions_shows_error(file_name) :
         "test_60mb.pdf",
     ]
 )
-def test_003_image_upload_exceeds_max_size_shows_error(file_name):
+def test_003_image_upload_exceeds_max_size_shows_error(driver, file_name):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 이미지 파일 업로드 하기
-    open_file_upload_dialog(driver)
     
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print(f"업로드 할 {file_name} 이미지 파일 경로")
     relative_path = f'../../src/resources/asserts/files/{file_name}'
     file_path = get_file_path(relative_path)
     
-     # 4. 이미지 파일 업로드
+     # 3. 이미지 파일 업로드
     print(f"{file_name} 이미지 파일 업로드 중")
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
@@ -141,6 +142,7 @@ def test_003_image_upload_exceeds_max_size_shows_error(file_name):
     # 이미지 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
     try :
         print(f"{file_name} 이미지 파일 미리보기 확인 중")
+        wait = WebDriverWait(driver, 10)
         wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )
@@ -178,27 +180,26 @@ def test_003_image_upload_exceeds_max_size_shows_error(file_name):
         "test_49.9mb.jpg",
     ]
 )
-def test_004_image_upload_boundary_size_succeeds(file_name):
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+def test_004_image_upload_boundary_size_succeeds(driver, file_name):
     
-    # 2. 이미지 파일 업로드 하기
-    open_file_upload_dialog(driver)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print(f"업로드 할 {file_name} 이미지 파일 경로")
     relative_path = f'../../src/resources/asserts/images/{file_name}'
     file_path = get_file_path(relative_path)
     
-    # 4. 이미지 파일 업로드
+    # 3. 이미지 파일 업로드 하기
     print(f"{file_name} 이미지 파일 업로드 시도 중")
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
-    # 5. 업로드 확인
+    # 4. 업로드 확인
     print(f"{file_name} 이미지 파일 미리보기 확인 중")
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
     )
@@ -219,10 +220,12 @@ MULTI_IMAGE_FILES = [
     'test_multi_1.jpg',
     'test_multi_2.png'
 ]
-def test_005_image_upload_multiple_files() :
+def test_005_image_upload_multiple_files(driver) :
     
-     # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
+     # 1. 로그인
+    
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
@@ -246,15 +249,11 @@ def test_005_image_upload_multiple_files() :
 
 # [IMG_MDL_TC_006] 특수문자가 포함된 이미지 파일명 업로드 시 정상 업로드 확인
 
-def test_006_image_upload_filename_with_special_characters_succeeds():
+def test_006_image_upload_filename_with_special_characters_succeeds(driver):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
-    
-    # 2. 이미지 파일 업로드 하기
-    upload_page = UploadPage(driver)
-    upload_page.open_file_upload_dialog()
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
     # 3. 이미지 파일 경로 지정
     print("업로드 할 특수문자 포함된 파일명 이미지 파일 경로")
@@ -262,14 +261,14 @@ def test_006_image_upload_filename_with_special_characters_succeeds():
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path)
 
-    
     # 4. 이미지 파일 업로드
-    print("특수문자 포함된 파일명 이미지 파일 업로드 시도 중")
-
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
-    # 5. 업로드 확인
+    # 4. 업로드 확인
     print("특수문자 포함된 파일명 이미지 파일 미리보기 확인 중")
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
     )
@@ -285,29 +284,27 @@ def test_006_image_upload_filename_with_special_characters_succeeds():
 
 # [IMG_MDL_TC_007] 헤더가 손상된 이미지 업로드 시 에러 메시지가 표시되는지 확인
 
-def test_007_image_upload_corrupted_header_shows_error():
+def test_007_image_upload_corrupted_header_shows_error(driver):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    upload_page = UploadPage(driver)
-    upload_page.open_file_upload_dialog()
-    
-    # 3. 이미지 파일 경로 지정
+    # 2. 이미지 파일 경로 지정
     print("업로드 할 손상된 이미지 파일 경로")
     relative_path = '../../src/resources/asserts/images/test_corrupted_invalid_header.jpg'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
-     # 4. 이미지 파일 업로드
-    print("손상된 이미지 파일 업로드 중")
-
+    # 3. 이미지 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
     
     # 이미지 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
     try :
         print("손상된 이미지 파일 미리보기 확인 중")
+        wait = WebDriverWait(driver, 10)
         wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )

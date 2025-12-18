@@ -2,37 +2,37 @@ import time
 import os
 import pytest
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout, get_file_path, open_file_upload_dialog
+from src.utils.helpers import setup_driver, get_file_path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
+from src.pages.upload_page import UploadPage
+from src.pages.login_page import LoginPage
+from src.pages.main_page import GnbComponent
 
 # [DOC_MDL_TC_001] 빈 문서가 정상 업로드되는지 확인
 
-def test_001_document_upload_empty_file_succeeds():
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+def test_001_document_upload_empty_file_succeeds(driver):
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print("업로드 할 빈 문서 파일 경로")
     relative_path = '../../src/resources/asserts/files/test_empty.pdf'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
-    # 4. 문서 파일 업로드
-    print("빈 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(5)
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
+
     
-    # 5. 문서 파일 업로드 확인
+    # 4. 문서 파일 업로드 확인
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
     )
@@ -48,34 +48,28 @@ def test_001_document_upload_empty_file_succeeds():
 
 # [DOC_MDL_TC_002] 암호화 문서 업로드 시 에러 메시지가 표시되는지 확인 
 
-def test_002_document_upload_encrypted_file_shows_error():
+def test_002_document_upload_encrypted_file_shows_error(driver):
     
-     # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver) 
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print("업로드 할 암호화 문서 파일 경로")
     relative_path = '../../src/resources/asserts/files/test_encrypted.docx'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
-     # 4. 문서 파일 업로드
-    print("암호화 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(3)
-
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
     
     # 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
     try :
         
         print("파일 카드 생성 여부 확인 중")
+        wait = WebDriverWait(driver, 10)
         wait.until(
             EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
         )
@@ -117,29 +111,24 @@ def test_002_document_upload_encrypted_file_shows_error():
         "test_normal.docx",
     ]
 )
-def test_003_document_upload_valid_extension_pdf(file_name):
+def test_003_document_upload_valid_extension_pdf(driver, file_name):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print(f"업로드 할 파일 경로: {file_name}")
     relative_path = f'../../src/resources/asserts/files/{file_name}'
     file_path = get_file_path(relative_path)
 
-    # 4. 문서 파일 업로드
-    print(f"{file_name} 파일 업로드 시도 중")
-    file_input_element = wait.until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(5)
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
     
-    # 5. 문서 파일 업로드 확인
+    # 4. 문서 파일 업로드 확인
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
     )
@@ -162,32 +151,26 @@ def test_003_document_upload_valid_extension_pdf(file_name):
         "test_fail.mp4",
     ]
 )
-def test_004_document_invalid_extensions_shows_error(file_name) :
+def test_004_document_invalid_extensions_shows_error(driver, file_name) :
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print(f"업로드 할 문서 파일 경로 {file_name}")
     relative_path = f'../../src/resources/asserts/files/{file_name}'
     file_path = get_file_path(relative_path)
     
-    # 4. 문서 파일 업로드
-    print(f"미지원 확장자{file_name} 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(5)
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
     
     # 문서 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
     
     try :
-        
+        wait = WebDriverWait(driver, 10)
         print(f"{file_name} 파일 카드 생성 확인 중")
         wait.until(
             EC.presence_of_element_located((By.XPATH, f'//span[text()="{file_name}"]'))
@@ -225,33 +208,26 @@ def test_004_document_invalid_extensions_shows_error(file_name) :
         "test_60mb.pdf",
     ]
 )
-def test_005_document_upload_exceeds_max_size_shows_error(file_name):
+def test_005_document_upload_exceeds_max_size_shows_error(driver, file_name):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print(f"업로드 할 문서 파일 경로: {file_name}")
     relative_path = f'../../src/resources/asserts/files/{file_name}'
     file_path = get_file_path(relative_path)
     
-     # 4. 문서 파일 업로드
-    print(f"{file_name} 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(3)
-
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
     
     # 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
     try :
-        
         print(f"({file_name})파일 카드 생성 여부 확인 중")
+        wait = WebDriverWait(driver, 10)
         wait.until(
             EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
         )
@@ -281,28 +257,6 @@ def test_005_document_upload_exceeds_max_size_shows_error(file_name):
         print("테스트 실패: 오류 메시지가 나타나지 않음")
         pytest.fail(f"허용 용량 초과 문서 파일({file_name}) 업로드 시 오류 메시지가 표시되지 않음")
 
-
-    
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
-    
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
-    print("업로드 할 60MB 문서 파일 경로")
-    relative_path = '../../src/resources/asserts/files/test_60mb.pdf'
-    file_path = get_file_path(relative_path)
-    file_name = os.path.basename(file_path) 
-    
-     # 4. 문서 파일 업로드
-    print("60MB 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(3)
 
     
     # 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
@@ -344,29 +298,24 @@ def test_005_document_upload_exceeds_max_size_shows_error(file_name):
         "test_49.9mb.docx",
     ]
 )
-def test_006_document_upload_boundary_size_succeeds(file_name):
+def test_006_document_upload_boundary_size_succeeds(driver, file_name):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print(f"업로드 할 문서 파일 경로: {file_name}")
     relative_path = f'../../src/resources/asserts/files/{file_name}'
     file_path = get_file_path(relative_path)
     
-    # 4. 문서 파일 업로드
-    print(f"{file_name} 파일 업로드 시도 중")
-    file_input_element = wait.until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(5)
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
     
-    # 5. 문서 파일 업로드 확인
+    # 4. 문서 파일 업로드 확인
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
     )
@@ -386,16 +335,13 @@ MULTI_DOC_FILES = [
         'test_multi_1.pdf',
         'test_multi_2.docx'
     ]
-def test_007_document_upload_multiple_files_succeeds():
+def test_007_document_upload_multiple_files_succeeds(driver):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 문서 파일 업로드 하기
-    open_file_upload_dialog(driver)
-    
-    #  3. 문서 파일 경로 지정
+    # 파일 경로 지정
     file_names_to_upload = MULTI_DOC_FILES
     
     # current_dir
@@ -422,61 +368,46 @@ def test_007_document_upload_multiple_files_succeeds():
         
         # 파일 경로를 리스트에 추가
         file_paths_list.append(file_path)
-    
-    files_to_send = '\n'.join(file_paths_list)
-    print(f"Selenium에 전송할 문자열:\n{files_to_send}")
+
     
     # 4. 문서 파일 업로드
-    file_input_element = wait.until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(files_to_send)
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_multiple_files(file_paths_list)
     time.sleep(5)
     print(f"== 다중 파일({file_name}) 업로드 요청 완료 ==")
     
     # 문서 파일 첨부 성공 여부 확인
     
     for file_name in file_names_to_upload:
-        
-        wait.until(
+        upload_document = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
         )
-        print(f"{file_name} 파일 카드가 나타남 확인")
-    
-    # 추가 안정화 대기
-    time.sleep(3)  
-    
     # 테스트 성공 여부 확인
-    uploaded_image = driver.find_element(By.XPATH, f"//span[text()='{file_name}']")
-    assert uploaded_image.is_displayed(), f"업로드된({file_name}) 파일 카드가 화면에 나타나지 않았습니다."
+    assert upload_document.is_displayed(), f"업로드된({file_name}) 파일 카드가 화면에 나타나지 않았습니다."
     print(f"==({file_name}) 파일 업로드 완료 ==")
 
 # [DOC_MDL_TC_008] 특수문자가 포함된 문서 파일명 업로드 시 정상 업로드 확인
 
-def test_008_document_upload_filename_with_special_characters_succeeds():
+def test_008_document_upload_filename_with_special_characters_succeeds(driver):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print("업로드 할 특수문자 포함된 파일명 문서 파일 경로")
     relative_path = '../../src/resources/asserts/files/test_한글@#$.pdf'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
-    # 4. 문서 파일 업로드
-    print("특수문자 포함된 파일명 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(5)
-    
-    # 5. 문서 파일 업로드 확인
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
+
+    # 4. 문서 파일 업로드 확인
+    wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
     )
@@ -492,34 +423,29 @@ def test_008_document_upload_filename_with_special_characters_succeeds():
 
 # [DOC_MDL_TC_009] 헤더가 손상된 문서 업로드 시 에러 메시지가 표시되는지 확인 
 
-def test_009_document_upload_corrupted_header_shows_error():
+def test_009_document_upload_corrupted_header_shows_error(driver):
     
-    # 1. 로그인, driver 객체
-    driver = setup_driver(EMAIL, PW)
-    wait = WebDriverWait(driver, 10)
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
     
-    # 2. 파일 업로드 창 열기
-    open_file_upload_dialog(driver)
-    
-    # 3. 문서 파일 경로 지정
+    # 2. 문서 파일 경로 지정
     print("업로드 할 손상된 문서 파일 경로")
     relative_path = '../../src/resources/asserts/files/test_corrupted_invalid_header.pdf'
     file_path = get_file_path(relative_path)
     file_name = os.path.basename(file_path) 
     
-     # 4. 문서 파일 업로드
-    print("손상된 문서 파일 업로드 시도 중")
-    file_input_element = wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
-    )
-    file_input_element.send_keys(file_path)
-    time.sleep(3)
-
+    # 3. 문서 파일 업로드
+    upload_page = UploadPage(driver)
+    upload_page.open_file_upload_dialog()
+    upload_page.upload_file(file_path)
+    
     
     # 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
     try :
         
         print(f"{file_name} 파일 카드 생성 여부 확인 중")
+        wait = WebDriverWait(driver, 10)
         wait.until(
             EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
         )
@@ -547,21 +473,6 @@ def test_009_document_upload_corrupted_header_shows_error():
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
         pytest.fail("손상된 문서 파일 업로드 시 오류 메시지가 표시되지 않음")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
