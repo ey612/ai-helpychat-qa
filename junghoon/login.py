@@ -16,7 +16,7 @@ def login(driver, wait):
         "qa3team06@elicer.com"
     )
     wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys(
-        "20qareset25elice!"
+        "team06cheerup!"
     )
     wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
