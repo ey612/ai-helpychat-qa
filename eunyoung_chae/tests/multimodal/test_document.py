@@ -2,7 +2,7 @@ import time
 import os
 import pytest
 from src.config.config import *
-from src.utils.helpers import login, setup_driver, logout, get_file_path, open_file_upload_dialog
+from src.utils.helpers import setup_driver, get_file_path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException

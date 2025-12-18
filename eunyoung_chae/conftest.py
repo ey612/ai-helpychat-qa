@@ -29,7 +29,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from src.utils.helpers import login, logout
 import time
 import os
 import pytest
@@ -39,26 +38,26 @@ import pytest
 WAIT_TIMEOUT = 10 
 # ================ 공통 상수 ======================
 
-def login (driver, EMAIL, PW):
+# def login (driver, EMAIL, PW):
     
-    # 아이디 입력 필드 찾아 입력
-    print('아이디 입력 중')
-    login_email = driver.find_element(By.CSS_SELECTOR, '[name="loginId"]')
-    login_email.send_keys(EMAIL)
-    print('아이디 입력 완료')
+#     # 아이디 입력 필드 찾아 입력
+#     print('아이디 입력 중')
+#     login_email = driver.find_element(By.CSS_SELECTOR, '[name="loginId"]')
+#     login_email.send_keys(EMAIL)
+#     print('아이디 입력 완료')
     
     
-    # 비밀번호 입력 필드 찾아 입력 
-    print('비밀번호 입력 중')
-    login_pw = driver.find_element(By.CSS_SELECTOR, '[name="password"]')
-    login_pw.send_keys(PW)
-    print('비밀번호 입력 완료')
+#     # 비밀번호 입력 필드 찾아 입력 
+#     print('비밀번호 입력 중')
+#     login_pw = driver.find_element(By.CSS_SELECTOR, '[name="password"]')
+#     login_pw.send_keys(PW)
+#     print('비밀번호 입력 완료')
 
-    # 로그인 버튼 클릭
+#     # 로그인 버튼 클릭
     
-    login_btn = driver.find_element(By.XPATH, '//button[text()="Login"]')
-    login_btn.click()
-    time.sleep(2)
+#     login_btn = driver.find_element(By.XPATH, '//button[text()="Login"]')
+#     login_btn.click()
+#     time.sleep(2)
 
 # ================ FIXTURE (드라이버 설정) ======================
 
