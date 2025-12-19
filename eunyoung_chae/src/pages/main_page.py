@@ -1,9 +1,9 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from src.config.config import *
-import time
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 
 
 class GnbComponent:
@@ -11,17 +11,15 @@ class GnbComponent:
     locators = {
         "account_management": (By.XPATH, "//span[text()='Account Management']"),
         "person_icon": (By.CSS_SELECTOR, '[data-testid="PersonIcon"]'),
+        "password_input": (By.CSS_SELECTOR, '[name="password"]'),
+        "login_button": (By.XPATH, '//button[text()="Login"]'),
+        "logout_button": (By.XPATH, '//p[text()="Logout"]'),
+        "language_setting": (By.XPATH, "//span[text()='언어 설정']"),
     }
 
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
-
-        # === 요소 위치 관리 ===
-        self.password_input = (By.CSS_SELECTOR, '[name="password"]')
-        self.login_button = (By.XPATH, '//button[text()="Login"]')
-        self.person_icon = (By.CSS_SELECTOR, '[data-testid="PersonIcon"]')
-        self.logout_button = (By.XPATH, '//p[text()="Logout"]')
 
     def logout(self):
         print("로그아웃 시도")
@@ -66,4 +64,5 @@ class GnbComponent:
             EC.element_to_be_clickable(self.locators["person_icon"])
         )
         personl_con.click()
+        time.sleep(2)
         return personl_con
