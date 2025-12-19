@@ -24,16 +24,12 @@ def test_login_with_invalid_id(driver_wait):
     password = "wrong_password"
 
     # 1️⃣ ID 입력
-    id_input = wait.until(
-        EC.presence_of_element_located((By.NAME, "loginId"))
-    )
+    id_input = wait.until(EC.presence_of_element_located((By.NAME, "loginId")))
     id_input.clear()
     id_input.send_keys(invalid_id)
 
     # 2️⃣ 비밀번호 입력
-    pw_input = wait.until(
-        EC.presence_of_element_located((By.NAME, "password"))
-    )
+    pw_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
     pw_input.clear()
     pw_input.send_keys(password)
 
@@ -61,16 +57,12 @@ def test_login_with_invalid_pw(driver_wait):
     password = "wrong_password"
 
     # 1️⃣ ID 입력
-    id_input = wait.until(
-        EC.presence_of_element_located((By.NAME, "loginId"))
-    )
+    id_input = wait.until(EC.presence_of_element_located((By.NAME, "loginId")))
     id_input.clear()
     id_input.send_keys(invalid_id)
 
     # 2️⃣ 비밀번호 입력
-    pw_input = wait.until(
-        EC.presence_of_element_located((By.NAME, "password"))
-    )
+    pw_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
     pw_input.clear()
     pw_input.send_keys(password)
 
@@ -89,6 +81,8 @@ def test_login_with_invalid_pw(driver_wait):
     time.sleep(3)
     assert error_msg.is_displayed()
     print("✅ 이메일 형식이 잘못되었습니다. 로그인 실패 정상 노출 확인 ")
+
+
 def test_login_fail_5_times_observe_lock_message(driver_wait):
     """
     같은 ID로 비밀번호를 5번 연속 틀렸을 때
@@ -108,10 +102,12 @@ def test_login_fail_5_times_observe_lock_message(driver_wait):
         """락 문구가 화면에 보이는지 짧게 체크."""
         try:
             warning = WebDriverWait(driver, 3).until(
-                EC.visibility_of_element_located((
-                    By.XPATH,
-                    "//*[contains(text(), 'You have attempted to log in incorrectly several times')]"
-                ))
+                EC.visibility_of_element_located(
+                    (
+                        By.XPATH,
+                        "//*[contains(text(), 'You have attempted to log in incorrectly several times')]",
+                    )
+                )
             )
             print("⚠ 락 경고 문구 감지:", warning.text.strip())
             return True
@@ -136,5 +132,7 @@ def test_login_fail_5_times_observe_lock_message(driver_wait):
             return  # PASS
 
     # 여기까지 왔다면 1~5회 어디에서도 락 문구가 안 뜬 것
-    print("ℹ 5번 연속 로그인 실패했지만 락 경고 문구는 나타나지 않았습니다. (테스트는 PASS로 처리)")
+    print(
+        "ℹ 5번 연속 로그인 실패했지만 락 경고 문구는 나타나지 않았습니다. (테스트는 PASS로 처리)"
+    )
     # assert / pytest.fail 없음 → 자연스럽게 PASS
