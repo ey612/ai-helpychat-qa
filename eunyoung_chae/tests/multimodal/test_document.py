@@ -1,18 +1,18 @@
-import time
 import os
+import time
 import pytest
-from src.config.config import *
-from src.utils.helpers import setup_driver, get_file_path
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
+
+from src.config.config import EMAIL, PW
+from src.utils.helpers import get_file_path
 from src.pages.upload_page import UploadPage
 from src.pages.login_page import LoginPage
-from src.pages.main_page import GnbComponent
 
 # [DOC_MDL_TC_001] 빈 문서가 정상 업로드되는지 확인
-
 def test_001_document_upload_empty_file_succeeds(driver):
     
     # 1. 로그인
@@ -47,7 +47,6 @@ def test_001_document_upload_empty_file_succeeds(driver):
     print("== 빈 문서 파일 업로드 완료 ==")
 
 # [DOC_MDL_TC_002] 암호화 문서 업로드 시 에러 메시지가 표시되는지 확인 
-
 def test_002_document_upload_encrypted_file_shows_error(driver):
     
     # 1. 로그인

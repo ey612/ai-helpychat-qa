@@ -1,15 +1,16 @@
-import time
 import os
+import time
 import pytest
-from src.config.config import *
-from src.utils.helpers import setup_driver, get_file_path
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
+
 from src.pages.upload_page import UploadPage
 from src.pages.login_page import LoginPage
-from src.pages.main_page import GnbComponent
+from src.config.config import EMAIL, PW
+from src.utils.helpers import get_file_path
 
 # [IMG_MDL_TC_001] 지원 확장자 이미지가 정상 업로드되는지 확인
 
