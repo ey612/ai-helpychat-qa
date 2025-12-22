@@ -276,7 +276,8 @@ def password_change_with_validation(d):
     def done(_d):
         # 오류 키워드가 남아있으면 아직 실패 상태일 가능성
         b = body_text(_d)
-        if body_has_any(_d, FORMAT_ERROR_KEYWORDS):
+        filtered = [k for k in FORMAT_ERROR_KEYWORDS if k != "비밀번호"]
+        if body_has_any(_d, filtered):
             return False
         # scope 내 입력칸이 사라지면 편집 종료
         try:
@@ -346,10 +347,10 @@ def test_flow():
         ok("전체 완료: 이름 원복 + 비밀번호 형식오류 확인 + 비밀번호 변경")
     finally:
         # 필요하면 확인 후 종료
-        # print("⏳ 5초 후 브라우저 종료")
-        # time.sleep(5)
-        # d.quit()
-        pass
+        print("⏳ 5초 후 브라우저 종료")
+        time.sleep(5)
+        d.quit()
+    
 
 
 if __name__ == "__main__":
