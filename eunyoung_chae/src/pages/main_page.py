@@ -28,6 +28,9 @@ class GnbComponent:
         icon = self.wait.until(EC.element_to_be_clickable(self.locators["person_icon"]))
         icon.click()
 
+        # 드롭다운 메뉴가 나타날 때까지 기다려
+        self.wait.until(EC.visibility_of_element_located(self.locators["logout_button"]))
+        
         # 2. 로그아웃 버튼 클릭
         # ogout_btn = self.wait.until(EC.element_to_be_clickable(self.logout_button))
         logout_btn = self.wait.until(EC.element_to_be_clickable(self.locators["logout_button"]))
@@ -40,9 +43,8 @@ class GnbComponent:
         return login_btn
 
     def click_person_icon(self):
-        personl_con = self.wait.until(
+        personl_icon = self.wait.until(
             EC.element_to_be_clickable(self.locators["person_icon"])
         )
-        personl_con.click()
-        time.sleep(2)
-        return personl_con
+        personl_icon.click()
+        return personl_icon
