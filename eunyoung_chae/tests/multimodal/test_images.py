@@ -22,6 +22,7 @@ from src.utils.helpers import get_file_path
     ]
 )
 def test_001_image_upload_valid_extension(driver, file_name):
+    wait = WebDriverWait(driver, 10)
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -39,17 +40,13 @@ def test_001_image_upload_valid_extension(driver, file_name):
     
     # 4. 업로드 확인
     print(f"{file_name} 이미지 파일 미리보기 확인 중")
-    wait = WebDriverWait(driver, 10)
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+    
+    uploaded_image = wait.until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
     )
     print(f"{file_name} 이미지 파일 미리보기 나타남")
     
-    # 추가 안정화 대기
-    time.sleep(3)  
-    
     # 테스트 성공 여부 확인
-    uploaded_image = driver.find_element(By.CSS_SELECTOR, f'img[alt="{file_name}"]')
     assert uploaded_image.is_displayed(), f"업로드된 이미지 파일 {file_name} 미리보기가 화면에 나타나지 않았습니다."
     print(f"== {file_name} 이미지 파일 업로드 완료 ==")
 
@@ -64,6 +61,7 @@ def test_001_image_upload_valid_extension(driver, file_name):
     ]
 )
 def test_002_image_invalid_extensions_shows_error(driver, file_name) :
+    wait = WebDriverWait(driver, 10)
     
      # 1. 로그인
     login_page = LoginPage(driver)
@@ -81,12 +79,10 @@ def test_002_image_invalid_extensions_shows_error(driver, file_name) :
     
     # 이미지 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
     
-    try :
-        
+    try :        
         print(f"{file_name} 이미지 파일 미리보기 확인 중")
-        wait = WebDriverWait(driver, 10)
         wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )
         pytest.fail(f"지원하지 않는 확장자 {file_name} 이미지 파일 업로드 시 미리보기가 표시되면 안 됩니다.")
         
@@ -106,6 +102,7 @@ def test_002_image_invalid_extensions_shows_error(driver, file_name) :
                 f"지원하지 않는 확장자에 대한 오류 메시지가 표시되어야 합니다. (실제 메시지: {alert_text})"
 
         alert.accept()
+        print("미지원 확장자 이미지 업로드 오류 메시지 확인 완료")
 
     except TimeoutException:
         pytest.fail(
@@ -123,6 +120,7 @@ def test_002_image_invalid_extensions_shows_error(driver, file_name) :
     ]
 )
 def test_003_image_upload_exceeds_max_size_shows_error(driver, file_name):
+    wait = WebDriverWait(driver, 10)
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -143,16 +141,14 @@ def test_003_image_upload_exceeds_max_size_shows_error(driver, file_name):
     # 이미지 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
     try :
         print(f"{file_name} 이미지 파일 미리보기 확인 중")
-        wait = WebDriverWait(driver, 10)
         wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )
         pytest.fail("허용 용량 초과 이미지 파일 업로드 시 미리보기가 표시되면 안 됩니다.")
     
     except TimeoutException:
         # 미리보기가 나타나지 않으면 성공
         pass
-    
     
      # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     try:
@@ -167,7 +163,8 @@ def test_003_image_upload_exceeds_max_size_shows_error(driver, file_name):
 
         print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
         alert.accept()
-            
+        print("허용 용량 초과 이미지 업로드 오류 메시지 확인 완료")
+
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
         pytest.fail("허용 용량 초과 이미지 파일 업로드 시 오류 메시지가 표시되지 않음")
@@ -182,6 +179,7 @@ def test_003_image_upload_exceeds_max_size_shows_error(driver, file_name):
     ]
 )
 def test_004_image_upload_boundary_size_succeeds(driver, file_name):
+    wait = WebDriverWait(driver, 10)
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -200,17 +198,12 @@ def test_004_image_upload_boundary_size_succeeds(driver, file_name):
     
     # 4. 업로드 확인
     print(f"{file_name} 이미지 파일 미리보기 확인 중")
-    wait = WebDriverWait(driver, 10)
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+    uploaded_image = wait.until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
     )
     print(f"{file_name} 이미지 파일 미리보기 나타남")
     
-    # 추가 안정화 대기
-    time.sleep(3)  
-    
     # 테스트 성공 여부 확인
-    uploaded_image = driver.find_element(By.CSS_SELECTOR, f'img[alt="{file_name}"]')
     assert uploaded_image.is_displayed(), "업로드된 49MB 이미지 파일 미리보기가 화면에 나타나지 않았습니다."
     print(f"== {file_name} 이미지 파일 업로드 완료 ==")
 
@@ -239,10 +232,9 @@ def test_005_image_upload_multiple_files(driver) :
     
     upload_page.upload_multiple_files(file_paths)
 
-
     for file_name in MULTI_IMAGE_FILES:
         upload_image = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located(
+            EC.visibility_of_element_located(
                 (By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )
         assert upload_image.is_displayed(), "업로드된 파일 미리보기 이미지가 화면에 나타나지 않았습니다."
@@ -251,6 +243,7 @@ def test_005_image_upload_multiple_files(driver) :
 # [IMG_MDL_TC_006] 특수문자가 포함된 이미지 파일명 업로드 시 정상 업로드 확인
 
 def test_006_image_upload_filename_with_special_characters_succeeds(driver):
+    wait = WebDriverWait(driver, 10)
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -269,23 +262,20 @@ def test_006_image_upload_filename_with_special_characters_succeeds(driver):
     
     # 4. 업로드 확인
     print("특수문자 포함된 파일명 이미지 파일 미리보기 확인 중")
-    wait = WebDriverWait(driver, 10)
-    wait.until(
+    
+    uploaded_image = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
     )
-    print("특수문자 포함된 파일명 이미지 파일 미리보기 나타남")
-    
-    # 추가 안정화 대기
-    time.sleep(3)  
+    print("특수문자 포함된 파일명 이미지 파일 미리보기 나타남") 
     
     # 테스트 성공 여부 확인
-    uploaded_image = driver.find_element(By.CSS_SELECTOR, f'img[alt="{file_name}"]')
     assert uploaded_image.is_displayed(), "업로드된 특수문자 포함된 파일명 이미지 파일 미리보기가 화면에 나타나지 않았습니다."
     print("== 특수문자 포함된 파일명 이미지 파일 업로드 완료 ==")
 
 # [IMG_MDL_TC_007] 헤더가 손상된 이미지 업로드 시 에러 메시지가 표시되는지 확인
 
 def test_007_image_upload_corrupted_header_shows_error(driver):
+    wait = WebDriverWait(driver, 10)
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -305,16 +295,15 @@ def test_007_image_upload_corrupted_header_shows_error(driver):
     # 이미지 파일 첨부 성공 여부 확인 (미리보기가 나타나면 안 됨)
     try :
         print("손상된 이미지 파일 미리보기 확인 중")
-        wait = WebDriverWait(driver, 10)
+        
         wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
         )
         pytest.fail("손상된 이미지 파일 업로드 시 미리보기가 표시되면 안 됩니다.")
     
     except TimeoutException:
         # 미리보기가 나타나지 않으면 성공
-        pass
-    
+        pass   
     
      # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     try:
@@ -329,6 +318,7 @@ def test_007_image_upload_corrupted_header_shows_error(driver):
             
         print("테스트 통과: 손상되었거나 잘못된 형식을 안내하는 오류 메시지 확인됨")
         alert.accept()
+        print("손상된 이미지 업로드 오류 메시지 확인 완료")
         
     except TimeoutException:
         print("테스트 실패: 오류 메시지가 나타나지 않음")
