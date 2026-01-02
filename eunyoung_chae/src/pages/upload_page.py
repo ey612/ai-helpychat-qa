@@ -9,10 +9,14 @@ class UploadPage:
     
         # [+] 버튼 클릭 -> [파일 업로드] 버튼 클릭 ( 파일 선택 UI 나오게 하는 것 )
     def open_file_upload_dialog(self):
-        plus_icon = self.driver.find_element(By.CSS_SELECTOR, '[data-testid="plusIcon"]')
+        plus_icon = self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="plusIcon"]'))
+        )
         plus_icon.click()
         
-        upload_file_btn = self.driver.find_element(By.XPATH, "//span[text()='파일 업로드']")
+        upload_file_btn = self.wait.until(
+            EC.element_to_be_clickable((By.XPATH, "//span[text()='파일 업로드']"))
+        )
         upload_file_btn.click()
 
         # 파일 선택 + [열기] 버튼 클릭
