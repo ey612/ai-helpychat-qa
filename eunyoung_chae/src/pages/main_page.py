@@ -61,15 +61,15 @@ class GnbComponent:
         return language_setting
     
     def is_account_management_displayed(self):
-        VERIFICATION_TEXT = "Account Management"
-        account_mgmt_element = self.wait.until(
-            EC.visibility_of_element_located(self.locators["account_management"])
-        )
-        print(
-            f"✅ 언어 변경 확인 성공: '{VERIFICATION_TEXT}' 텍스트가 화면에서 확인되었습니다."
-        )
-        return account_mgmt_element.is_displayed()
-        
+        """Account Management 텍스트가 표시되는지 확인"""
+        try:
+            
+            account_mgmt_element = self.wait.until(
+                EC.visibility_of_element_located(self.locators["account_management"])
+            )
+            return account_mgmt_element.is_displayed()
+        except TimeoutException:
+            return False
         
         
 class LanguageSetting:

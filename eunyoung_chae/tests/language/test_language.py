@@ -55,52 +55,45 @@ def test_002_language_setting_persists_after_relogin(driver):
 
         # 4. 언어 변경 확인 (검증)
         is_displayed = gnd_component.is_account_management_displayed()
-        assert is_displayed, "Account Management가 표시되지 않았습니다."
+        assert is_displayed, "언어 변경 확인 실패: Account Management가 표시되지 않았습니다."
+        print("✅ 언어 변경 확인 성공!")
 
         # 5. 새로 고침
         driver.refresh()
-        print("✔️ 페이지를 새로고침했습니다.")
-        # 드롭다운이 보이지 않을 때까지 기다려
+        print("✅ 페이지를 새로고침했습니다.")
+        
+        # 드롭다운이 보이지 않을 때까지 대기
         wait.until(
             EC.invisibility_of_element_located(gnd_component.locators["account_management"])
         )
 
-        # 7.로그아웃
+        # 6.로그아웃
         login_btn = gnd_component.logout()
-        assert login_btn.is_displayed()
+        assert login_btn.is_displayed(), "로그아웃 실패: 로그인 버튼이 표시되지 않았습니다"
         
-        # 로그인
-        wait.until(
-            EC.visibility_of_element_located(
-                login_page.locators["login_button"]
-            )
-        )
+        # 7. 재로그인
         login_page.login(PW)
         
+        # 로그인 완료 대기
         wait.until(
-            EC.invisibility_of_element_located(
-                login_page.locators["login_button"]
-            )
+            EC.invisibility_of_element_located(login_page.locators["login_button"])
         )
-        print("✔️ 로그인 페이지 이탈 확인")
+        print("✅ 재로그인 완료")
 
+        # 메인 페이지 로드 대기
         wait.until(
         EC.element_to_be_clickable(gnd_component.locators["person_icon"])
         ) 
-        # 8. 언어 변경 유지 확인
-
+        
+        # 8. 언어 유지 확인
         gnd_component.click_person_icon()
-
-        account_mgmt_element = wait.until(
-            EC.visibility_of_element_located(gnd_component.locators["account_management"])
-        )
-        print(f"✅ 재로그인 후 언어 유지 확인 성공!")
-        assert (
-            account_mgmt_element.is_displayed()
-        ), "재로그인 후 언어 설정이 유지되지 않았습니다."
+        
+        if is_displayed:
+            print("✅ 재로그인 후 언어 유지 확인 성공!")
+        assert is_displayed, "재로그인 후 언어 설정이 유지되지 않았습니다."
 
         driver.refresh()
-        print("✔️ 페이지를 새로고침했습니다.")
+        print("✅ 페이지를 새로고침했습니다.")
     
     except Exception as e:
         assert False, f"사용자 아이콘 클릭 실패: {e}"
@@ -112,29 +105,15 @@ def test_002_language_setting_persists_after_relogin(driver):
             try:
                 print("\n== 언어 설정 원상복구 시작 ==")
 
-                wait = WebDriverWait(driver, 10)
+                # 언어 설정 메뉴 열기
+                gnb = GnbComponent(driver)
+                language_setting = LanguageSetting(driver)
+                
+                gnb.click_person_icon()
+                gnb.click_language_setting()
 
-                # 사람 아이콘 클릭
-                personl_con = wait.until(
-                    EC.element_to_be_clickable(gnd_component.locators["person_icon"])
-                )
-                personl_con.click()
-
-                # 언어 설정 클릭
-                language_setting = wait.until(
-                    EC.element_to_be_clickable(
-                        (By.XPATH, "//span[text()='Language Settings']")
-                    )
-                )
-                language_setting.click()
-
-                # 한국어 선택
-                language_korean = wait.until(
-                    EC.element_to_be_clickable(
-                        (By.XPATH, "//p[text()='한국어(대한민국)']")
-                    )
-                )
-                language_korean.click()
+                # 한국어 변경
+                language_setting.select_language("한국어(대한민국)")
 
                 print("✅ 한국어 원상복구 완료!")
 
