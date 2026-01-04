@@ -40,7 +40,7 @@ class UploadPage:
         file_input.send_keys(files_to_send)
         
     def is_file_uploaded(self, file_name):
-        """ 특정 파일이 업로드되었는지 확인"""
+        """문서 파일이 업로드되었는지 확인"""
         try:
             file_card = self.wait.until(
                 EC.visibility_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
@@ -51,6 +51,18 @@ class UploadPage:
             print(f"❎ '{file_name}' 파일 카드를 찾을 수 없음")
             return False
         
+    def is_image_uploaded(self, file_name):
+        """이미지 파일이 업로드되었는지 확인"""
+        try :
+            image_card = self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'img[alt="{file_name}"]'))
+        )
+            print("파일 카드가 나타남")
+            return image_card.is_displayed()
+        except TimeoutException:
+            print(f"❎ '{file_name}' 이미지 파일 카드를 찾을 수 없음")
+            return False           
+            
     def verify_alert_contains(self, *expected_texts):
         """Alert 메시지에 특정 텍스트들중 하나라도 포함되어 있는지 확인"""
         try:
