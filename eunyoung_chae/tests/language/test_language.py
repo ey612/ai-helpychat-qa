@@ -1,6 +1,4 @@
-import time
 
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -11,7 +9,6 @@ from src.config.config import EMAIL, PW
 
 # [LANG_TC_001] 프로필 메뉴에서 언어 설정 클릭 시 지원 언어 목록이 표시되는지 확인
 def test_001_language_menu_shows_supported_languages(driver):
-    wait = WebDriverWait(driver, 10)
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -46,6 +43,7 @@ def test_002_language_setting_persists_after_relogin(driver):
     gnd_component = GnbComponent(driver)
 
     try:
+        
         gnd_component.click_person_icon()
         gnd_component.click_language_setting()
         
@@ -61,12 +59,13 @@ def test_002_language_setting_persists_after_relogin(driver):
         # 5. 새로 고침
         driver.refresh()
         print("✅ 페이지를 새로고침했습니다.")
+
         
         # 드롭다운이 보이지 않을 때까지 대기
         wait.until(
             EC.invisibility_of_element_located(gnd_component.locators["account_management"])
         )
-
+        
         # 6.로그아웃
         login_btn = gnd_component.logout()
         assert login_btn.is_displayed(), "로그아웃 실패: 로그인 버튼이 표시되지 않았습니다"
@@ -87,14 +86,13 @@ def test_002_language_setting_persists_after_relogin(driver):
         
         # 8. 언어 유지 확인
         gnd_component.click_person_icon()
-        
-        if is_displayed:
-            print("✅ 재로그인 후 언어 유지 확인 성공!")
-        assert is_displayed, "재로그인 후 언어 설정이 유지되지 않았습니다."
+        is_displayed_second = gnd_component.is_account_management_displayed()
+        assert is_displayed_second, "재로그인 후 언어 설정이 유지되지 않았습니다."
+        print("✅ 재로그인 후 언어 유지 확인 성공!")
 
         driver.refresh()
         print("✅ 페이지를 새로고침했습니다.")
-    
+        
     except Exception as e:
         assert False, f"사용자 아이콘 클릭 실패: {e}"
     

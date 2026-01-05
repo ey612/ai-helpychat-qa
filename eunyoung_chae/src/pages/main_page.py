@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 
-
 class GnbComponent:
     """상단 네비게이션 바 컴포넌트"""
     
@@ -20,17 +19,25 @@ class GnbComponent:
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 20)
 
     def logout(self):
         """로그아웃 시도"""
-
+    
         # 1. 사용자 아이콘 클릭
         icon = self.wait.until(EC.element_to_be_clickable(self.locators["person_icon"]))
         icon.click()
         
         # 드롭다운이 보일 때까지 기다림
         self.wait.until(EC.visibility_of_element_located(self.locators["logout_button"]))
+        
+        # 🔴 추가
+        try:
+            self.wait.until(EC.invisibility_of_element_located(
+                (By.CSS_SELECTOR, "[data-elice-user-profile-content='true']")
+            ))
+        except:
+            pass
         
         # 2. 로그아웃 버튼 클릭
         logout_btn = self.wait.until(EC.element_to_be_clickable(self.locators["logout_button"]))
@@ -116,3 +123,14 @@ class LanguageSetting:
         language_option = self.wait.until(EC.element_to_be_clickable(locator))
         language_option.click()
         print(f"✔️ '{language_name}' 선택 완료")
+        
+    def get_current_language(self):
+        """
+        현재 선택된 언어 텍스트 반환
+        """
+        selected_language = self.wait.until(
+            EC.presence_of_element_located(
+                self.locators["current_language"]
+            )
+        )
+        return selected_language.text
