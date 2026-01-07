@@ -14,7 +14,6 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent
 sys.path.insert(0, str(project_root))
 
-
 # ==========================================================
 # 2. WebDriver 및 Pytest Fixture 코드
 # ==========================================================
@@ -65,3 +64,20 @@ def driver() :
     '''모든 테스트가 끝난 후 브라우저 창 닫기'''
     print('\n WebDriver 종료 중 ...')
     driver.quit()
+# conftest.py
+
+@pytest.fixture(scope="function")
+def set_korean_language():
+    """로그인 후 언어를 한국어로 설정하는 fixture"""
+    
+    def _set_language(driver):
+        from src.pages.main_page import GnbComponent, LanguageSetting
+        
+        gnb = GnbComponent(driver)
+        gnb.click_person_icon()
+        gnb.click_language_setting()
+        
+        language_setting = LanguageSetting(driver)
+        language_setting.select_language("한국어(대한민국)")
+    
+    return _set_language

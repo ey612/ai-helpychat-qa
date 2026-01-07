@@ -1,4 +1,3 @@
-import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -14,7 +13,7 @@ class GnbComponent:
         "password_input": (By.CSS_SELECTOR, '[name="password"]'),
         "login_button": (By.XPATH, '//button[text()="Login"]'),
         "logout_button": (By.XPATH, '//p[text()="Logout"]'),
-        "language_setting": (By.XPATH, "//span[text()='언어 설정']"),
+        "language_setting": (By.XPATH, "//span[text()='언어 설정' or text()='Language Settings']"),
     }
 
     def __init__(self, driver):
@@ -31,7 +30,6 @@ class GnbComponent:
         # 드롭다운이 보일 때까지 기다림
         self.wait.until(EC.visibility_of_element_located(self.locators["logout_button"]))
         
-        # 🔴 추가
         try:
             self.wait.until(EC.invisibility_of_element_located(
                 (By.CSS_SELECTOR, "[data-elice-user-profile-content='true']")
@@ -51,6 +49,7 @@ class GnbComponent:
 
     def click_person_icon(self):
         """사용자 아이콘 클릭해서 프로필 드롭다운 열기"""
+        
         personl_icon = self.wait.until(
             EC.element_to_be_clickable(self.locators["person_icon"])
         )

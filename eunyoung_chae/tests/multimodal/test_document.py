@@ -27,12 +27,11 @@ def test_001_document_upload_empty_file_succeeds(driver):
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_file(file_path)
-
     
     # 4. 문서 파일 업로드 확인
     is_uploaded = upload_page.is_file_uploaded(file_name)
     assert is_uploaded, f"'{file_name}'파일이 업로드되지 않았습니다."
-    print("✅ 빈 문서 파일 업로드 완료")
+    print(f"✅ '{file_name}' 파일 업로드 완료")
     
 # [DOC_MDL_TC_002] 암호화 문서 업로드 시 에러 메시지가 표시되는지 확인 
 def test_002_document_upload_encrypted_file_shows_error(driver):
@@ -57,7 +56,6 @@ def test_002_document_upload_encrypted_file_shows_error(driver):
     assert not is_uploaded, \
         f"암호화된 파일 '{file_name}'의 파일 카드가 표시되면 안 됩니다."
     print("✅ 파일 카드가 나타나지 않음 (정상)")
-    
     
     # 5. 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     has_error_message = upload_page.verify_alert_contains("암호화")
@@ -124,7 +122,7 @@ def test_004_document_invalid_extensions_shows_error(driver, file_name):
         f"미지원 확장자 파일 '{file_name}'의 파일 카드가 표시되면 안 됩니다."
     print("✅ 파일 카드가 나타나지 않음 (정상)")
     
-    # 업로드 실패 후 오류 메시지가 뜨는지 확인
+    # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     has_error_message = upload_page.verify_alert_contains("지원","확장자")
     assert has_error_message, f"'{file_name}' 확장자 관련 오류 메시지가 표시되지 않음"
     print(f"✅ '{file_name}' 파일 업로드 오류 메시지 확인 완료")
@@ -164,38 +162,6 @@ def test_005_document_upload_exceeds_max_size_shows_error(driver, file_name):
     has_error_message = upload_page.verify_alert_contains("크기", "용량")
     assert has_error_message, f"'{file_name}' 용량 관련 오류 메시지가 표시되지 않음"
     print(f"✅ '{file_name}' 파일 업로드 오류 메시지 확인 완료")
-
-    
-    # 파일 첨부 성공 여부 확인 (파일 카드 생성이 나타나면 안 됨)
-    try :
-        
-        print("파일 카드 생성 여부 확인 중")
-        wait.until(
-            EC.presence_of_element_located((By.XPATH, f"//span[text()='{file_name}']"))
-        )
-        pytest.fail("허용 용량 초과 문서 파일 업로드 시 파일 카드가 표시되면 안 됩니다.")
-        
-    except TimeoutException:
-        # 파일 카드가 나타나지 않으면 성공
-        pass
-    
-    
-    # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
-    try:
-        print("오류 메시지 확인 중")
-        alert = wait.until(EC.alert_is_present())
-        alert_text = alert.text
-        print(f"Alert 메시지: {alert_text}")
-        
-        # "용량" 또는 "크기" 문구가 포함되어 있는지 확인
-        assert "용량" in alert_text or "크기" in alert_text, \
-            f"예상과 다른 오류 메시지: {alert_text}"
-        print("테스트 통과: 허용 용량 초과 오류 메시지 확인됨")
-        alert.accept()
-            
-    except TimeoutException:
-        print("테스트 실패: 오류 메시지가 나타나지 않음")
-        pytest.fail("허용 용량 초과 문서 파일 업로드 시 오류 메시지가 표시되지 않음")
    
 # [DOC_MDL_TC_006] 경계값 용량 문서 업로드 시 정상 업로드되는지 확인 (49MB) / (49.9MB)
 @pytest.mark.parametrize(
@@ -223,7 +189,7 @@ def test_006_document_upload_boundary_size_succeeds(driver, file_name):
     
     # 4. 문서 파일 업로드 확인
     is_uploaded = upload_page.is_file_uploaded(file_name)
-    assert is_uploaded, f"'{file_name}' 파일이 업로드 되지 않았습니다."
+    assert is_uploaded, f"'{file_name}' 파일이 업로드되지 않았습니다."
     print(f"✅'{file_name}' 파일 업로드 완료")
 
 # [DOC_MDL_TC_007] 여러 문서 동시 업로드 시 정상 업로드되는지 확인
@@ -252,7 +218,7 @@ def test_007_document_upload_multiple_files_succeeds(driver):
     upload_page.upload_multiple_files(file_paths_list)
     print(f"✅ {len(MULTI_DOC_FILES)}개 파일 업로드 요청 완료")
     
-    # 파일 업로드 확인
+    # 4. 다중 파일 업로드 확인
     for file_name in MULTI_DOC_FILES:
         is_uploaded = upload_page.is_file_uploaded(file_name)
         assert is_uploaded, f"'{file_name}' 파일이 업로드되지 않았습니다."

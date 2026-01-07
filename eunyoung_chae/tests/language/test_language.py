@@ -8,7 +8,7 @@ from src.config.config import EMAIL, PW
 
 
 # [LANG_TC_001] 프로필 메뉴에서 언어 설정 클릭 시 지원 언어 목록이 표시되는지 확인
-def test_001_language_menu_shows_supported_languages(driver):
+def test_001_language_menu_shows_supported_languages(driver, set_korean_language):
     
     # 1. 로그인
     login_page = LoginPage(driver)
@@ -89,31 +89,9 @@ def test_002_language_setting_persists_after_relogin(driver):
         is_displayed_second = gnd_component.is_account_management_displayed()
         assert is_displayed_second, "재로그인 후 언어 설정이 유지되지 않았습니다."
         print("✅ 재로그인 후 언어 유지 확인 성공!")
-
+        
         driver.refresh()
         print("✅ 페이지를 새로고침했습니다.")
         
     except Exception as e:
         assert False, f"사용자 아이콘 클릭 실패: {e}"
-    
-    finally:
-        # 언어 원상복구
-        if driver is not None:  # 드라이버가 생성되었을 때만 실행
-
-            try:
-                print("\n== 언어 설정 원상복구 시작 ==")
-
-                # 언어 설정 메뉴 열기
-                gnb = GnbComponent(driver)
-                language_setting = LanguageSetting(driver)
-                
-                gnb.click_person_icon()
-                gnb.click_language_setting()
-
-                # 한국어 변경
-                language_setting.select_language("한국어(대한민국)")
-
-                print("✅ 한국어 원상복구 완료!")
-
-            except Exception as e:
-                print(f"⚠️ 언어 설정 원상복구 실패: {e}")
