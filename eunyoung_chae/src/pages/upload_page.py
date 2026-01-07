@@ -8,8 +8,8 @@ class UploadPage:
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
     
-        # [+] 버튼 클릭 -> [파일 업로드] 버튼 클릭 ( 파일 선택 UI 나오게 하는 것 )
     def open_file_upload_dialog(self):
+        """"[+] 버튼 클릭 -> [파일 업로드] 버튼 클릭 ( 파일 선택 UI 나오게 하는 것 )"""
         plus_icon = self.wait.until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="plusIcon"]'))
         )
@@ -20,13 +20,13 @@ class UploadPage:
         )
         upload_file_btn.click()
 
-        # 파일 선택 + [열기] 버튼 클릭
     def upload_file(self, file_path):
+        """"파일 선택 + [열기] 버튼 클릭"""
         file_input = self.wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="file"]'))
         )
-        file_input.send_keys(file_path)
-      
+        file_input.send_keys(file_path)   
+    
     def upload_multiple_files(self, file_paths: list[str]):
         """
         여러 파일을 동시에 업로드
@@ -49,7 +49,7 @@ class UploadPage:
             return file_card.is_displayed()
         except TimeoutException:
             print(f"❎ '{file_name}' 파일 카드를 찾을 수 없음")
-            return False
+            return False        
         
     def is_image_uploaded(self, file_name):
         """이미지 파일이 업로드되었는지 확인"""
@@ -61,8 +61,8 @@ class UploadPage:
             return image_card.is_displayed()
         except TimeoutException:
             print(f"❎ '{file_name}' 이미지 파일 카드를 찾을 수 없음")
-            return False           
-            
+            return False
+                   
     def verify_alert_contains(self, *expected_texts):
         """Alert 메시지에 특정 텍스트들중 하나라도 포함되어 있는지 확인"""
         try:

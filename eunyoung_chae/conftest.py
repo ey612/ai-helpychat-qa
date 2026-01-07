@@ -27,7 +27,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+from src.pages.login_page import LoginPage
+from src.pages.main_page import GnbComponent, LanguageSetting
+from src.config.config import EMAIL, PW
 
 # ================ 공통 상수 ======================
 WAIT_TIMEOUT = 10 
@@ -64,20 +70,66 @@ def driver() :
     '''모든 테스트가 끝난 후 브라우저 창 닫기'''
     print('\n WebDriver 종료 중 ...')
     driver.quit()
-# conftest.py
+
 
 @pytest.fixture(scope="function")
-def set_korean_language():
-    """로그인 후 언어를 한국어로 설정하는 fixture"""
+def logged_in_korean(driver):
     
-    def _set_language(driver):
-        from src.pages.main_page import GnbComponent, LanguageSetting
+    # 1. 로그인
+    login_page = LoginPage(driver)
+    login_page.login(PW, EMAIL)
+    print("✔️ 로그인 완료")
+    
+    wait = WebDriverWait(driver, 10)
+    try:
+        # person icon이 보일 때까지 대기 (페이지 로드 완료 확인)
+        wait.until(EC.presence_of_element_located(
+            (By.CSS_SELECTOR, '[data-testid="PersonIcon"]')
+        ))
+        print("✔️ 페이지 로드 완료")
+    except:
+        print("⚠️ 페이지 로드 대기 시간 초과")
+    
+    # 2. 언어 확인
+    language_setting = LanguageSetting(driver)
+    if not language_setting.is_korean():
+        print(f"🔄 언어를 한국어로 변경합니다.. (현재: {language_setting.get_current_language()})")
         
         gnb = GnbComponent(driver)
         gnb.click_person_icon()
+        time.sleep(2)
         gnb.click_language_setting()
-        
-        language_setting = LanguageSetting(driver)
         language_setting.select_language("한국어(대한민국)")
+        driver.refresh()
+        time.sleep(1)
+        print("✔️ 언어 한국어로 변경 완료")
+    else:
+        print("✔️ 이미 한국어입니다.")
     
-    return _set_language
+    yield driver
+    
+    # Teardown
+    print("\n🔄 Teardown: 언어 복구 중...")
+    time.sleep(0.5)
+    
+    language_setting = LanguageSetting(driver)
+    if not language_setting.is_korean():
+        try:
+            gnb = GnbComponent(driver)
+            gnb.click_person_icon()
+            
+            wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//span[text()='언어 설정' or text()='Language Settings']")
+                )
+            )
+            time.sleep(0.5)
+            
+            gnb.click_language_setting()
+            language_setting.select_language("한국어(대한민국)")
+            
+            driver.refresh()
+            time.sleep(0.5)
+            print("✔️ 한국어로 복구 완료")
+        except Exception as e:
+            print(f"⚠️ 언어 복구 실패: {e}")

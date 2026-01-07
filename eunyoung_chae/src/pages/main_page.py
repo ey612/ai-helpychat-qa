@@ -59,6 +59,10 @@ class GnbComponent:
     def click_language_setting(self):
         """프로필 드롭다운에서 언어 설정 메뉴를 클릭한다."""
         print("== 언어 설정 클릭 중 ==")
+        self.wait.until(
+        EC.invisibility_of_element_located(
+        (By.CSS_SELECTOR, "span.MuiTypography-root.MuiTypography-body"))
+        )
         language_setting = self.wait.until(
             EC.element_to_be_clickable(self.locators["language_setting"])
         )
@@ -92,6 +96,7 @@ class LanguageSetting:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
+
     
     def _get_language_locator(self, language_name):
         """특정 언어의 locator를 생성한다."""
@@ -122,14 +127,33 @@ class LanguageSetting:
         language_option = self.wait.until(EC.element_to_be_clickable(locator))
         language_option.click()
         print(f"✔️ '{language_name}' 선택 완료")
+    
+    def is_korean(self):
+        """현재 언어가 한국어인지 확인"""
+        korean_indicators = ["새 대화", "검색", "도구", "에이전트 탐색"]
         
+        for text in korean_indicators:
+            try:
+                self.driver.find_element(By.XPATH, f"//*[text()='{text}']")
+                return True
+            except:
+                continue
+        
+        return False
+    
     def get_current_language(self):
-        """
-        현재 선택된 언어 텍스트 반환
-        """
-        selected_language = self.wait.until(
-            EC.presence_of_element_located(
-                self.locators["current_language"]
-            )
-        )
-        return selected_language.text
+        """사이드바 텍스트로 현재 언어 확인"""
+    
+        # 한국어 확인만 하면 됨!
+        korean_indicators = ["새 대화", "검색", "도구", "에이전트 탐색"]
+        
+        for text in korean_indicators:
+            try:
+                self.driver.find_element(By.XPATH, f"//*[text()='{text}']")
+            
+                return "한국어(대한민국)"
+            except:
+                continue
+        
+        # 한국어가 아니면 "not korean"
+        return "not korean"
