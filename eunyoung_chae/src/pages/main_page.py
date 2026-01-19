@@ -114,9 +114,9 @@ class LanguageSetting:
                 self.wait.until(
                     EC.visibility_of_element_located(current_locator)
                 )
-                print(f" ✔️ [성공] '{language}' 항목이 확인 되었습니다.")
+                print(f" [성공] '{language}' 항목이 확인 되었습니다.")
             except TimeoutException:
-                print(f"❎ [실패] '{language}' 항목을 찾을 수 없습니다.")
+                print(f" [실패] '{language}' 항목을 찾을 수 없습니다.")
                 test_passed = False
                 
         return test_passed
@@ -126,7 +126,7 @@ class LanguageSetting:
         locator = self._get_language_locator(language_name)
         language_option = self.wait.until(EC.element_to_be_clickable(locator))
         language_option.click()
-        print(f"✔️ '{language_name}' 선택 완료")
+        print(f"'{language_name}' 선택 완료")
     
     def is_korean(self):
         """현재 언어가 한국어인지 확인"""

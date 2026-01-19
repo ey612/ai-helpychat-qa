@@ -45,11 +45,11 @@ def test_002_language_setting_persists_after_relogin(logged_in_korean):
         # 3. 언어 변경 확인 (검증)
         is_displayed = gnd_component.is_account_management_displayed()
         assert is_displayed, "언어 변경 확인 실패: Account Management가 표시되지 않았습니다."
-        print("✅ 언어 변경 확인 성공!")
+        print("언어 변경 확인 성공!")
 
         # 4. 새로 고침
         driver.refresh()
-        print("✅ 페이지를 새로고침했습니다.")
+        print("페이지를 새로고침했습니다.")
 
         
         # 드롭다운이 보이지 않을 때까지 대기
@@ -69,7 +69,7 @@ def test_002_language_setting_persists_after_relogin(logged_in_korean):
         wait.until(
             EC.invisibility_of_element_located(login_page.locators["login_button"])
         )
-        print("✅ 재로그인 완료")
+        print("재로그인 완료")
 
         # 메인 페이지 로드 대기
         wait.until(
@@ -80,10 +80,10 @@ def test_002_language_setting_persists_after_relogin(logged_in_korean):
         gnd_component.click_person_icon()
         is_displayed_second = gnd_component.is_account_management_displayed()
         assert is_displayed_second, "재로그인 후 언어 설정이 유지되지 않았습니다."
-        print("✅ 재로그인 후 언어 유지 확인 성공!")
+        print("재로그인 후 언어 유지 확인 성공!")
         
         driver.refresh()
-        print("✅ 페이지를 새로고침했습니다.")
+        print("페이지를 새로고침했습니다.")
         
     except Exception as e:
         assert False, f"사용자 아이콘 클릭 실패: {e}"

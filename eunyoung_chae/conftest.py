@@ -61,7 +61,7 @@ def driver() :
     #4. 사이트 접속
     driver.get("https://qaproject.elice.io/ai-helpy-chat")
     time.sleep(3)
-    print('✔️ 사이트 접속 완료 (conftest.py)')
+    print('사이트 접속 완료 (conftest.py)')
     
     # yield : 태스트 함수들에게 설정된 드라이버 객체를 제공
     yield driver
@@ -78,7 +78,7 @@ def logged_in_korean(driver):
     # 1. 로그인
     login_page = LoginPage(driver)
     login_page.login(PW, EMAIL)
-    print("✔️ 로그인 완료")
+    print("로그인 완료")
     
     wait = WebDriverWait(driver, 10)
     try:
@@ -86,14 +86,14 @@ def logged_in_korean(driver):
         wait.until(EC.presence_of_element_located(
             (By.CSS_SELECTOR, '[data-testid="PersonIcon"]')
         ))
-        print("✔️ 페이지 로드 완료")
+        print("페이지 로드 완료")
     except:
-        print("⚠️ 페이지 로드 대기 시간 초과")
+        print("페이지 로드 대기 시간 초과")
     
     # 2. 언어 확인
     language_setting = LanguageSetting(driver)
     if not language_setting.is_korean():
-        print(f"🔄 언어를 한국어로 변경합니다.. (현재: {language_setting.get_current_language()})")
+        print(f"언어를 한국어로 변경합니다.. (현재: {language_setting.get_current_language()})")
         
         gnb = GnbComponent(driver)
         gnb.click_person_icon()
@@ -102,14 +102,14 @@ def logged_in_korean(driver):
         language_setting.select_language("한국어(대한민국)")
         driver.refresh()
         time.sleep(1)
-        print("✔️ 언어 한국어로 변경 완료")
+        print("언어 한국어로 변경 완료")
     else:
-        print("✔️ 이미 한국어입니다.")
+        print("이미 한국어입니다.")
     
     yield driver
     
     # Teardown
-    print("\n🔄 Teardown: 언어 복구 중...")
+    print("Teardown: 언어 복구 중...")
     time.sleep(0.5)
     
     language_setting = LanguageSetting(driver)
@@ -130,6 +130,6 @@ def logged_in_korean(driver):
             
             driver.refresh()
             time.sleep(0.5)
-            print("✔️ 한국어로 복구 완료")
+            print("한국어로 복구 완료")
         except Exception as e:
-            print(f"⚠️ 언어 복구 실패: {e}")
+            print(f"언어 복구 실패: {e}")

@@ -20,6 +20,6 @@ def save_screenshot(driver, folder_name, file_name):
     )
 
     driver.save_screenshot(screenshot_path)
-    print(f"📸 Screenshot saved: {screenshot_path}")
+    print(f"Screenshot saved: {screenshot_path}")
 
     return screenshot_path

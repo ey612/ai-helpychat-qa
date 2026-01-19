@@ -39,7 +39,7 @@ def test_001_image_upload_valid_extension(driver, file_name):
     # 4. 이미지 파일 업로드 확인
     is_uploaded = upload_page.is_image_uploaded(file_name)
     assert is_uploaded, f"'{file_name}'파일이 업로드되지 않았습니다."
-    print(f"✅ '{file_name}' 파일 업로드 완료")
+    print(f"'{file_name}' 파일 업로드 완료")
 
 # [IMG_MDL_TC_002] 미지원 확장자 이미지 업로드 시 에러 메시지가 표시되는지 확인
 @pytest.mark.parametrize(
@@ -70,12 +70,12 @@ def test_002_image_invalid_extensions_shows_error(driver, file_name):
     is_uploaded = upload_page.is_image_uploaded(file_name)
     assert not is_uploaded, \
         f"미지원 확장자 파일 '{file_name}'의 파일 카드가 표시되면 안 됩니다."
-    print("✅ 파일 카드가 나타나지 않음 (정상)")
+    print("파일 카드가 나타나지 않음 (정상)")
     
     # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     has_error_message = upload_page.verify_alert_contains("지원","확장자")
     assert has_error_message, f"'{file_name}' 확장자 관련 오류 메시지가 표시되지 않음"
-    print(f"✅ '{file_name}' 파일 업로드 오류 메시지 확인 완료")
+    print(f"'{file_name}' 파일 업로드 오류 메시지 확인 완료")
 
 # [IMG_MDL_TC_003] 허용 용량 초과 이미지 업로드 시 에러 메시지가 표시되는지 확인    
 @pytest.mark.parametrize(
@@ -107,12 +107,12 @@ def test_003_image_upload_exceeds_max_size_shows_error(driver, file_name):
     is_uploaded = upload_page.is_image_uploaded(file_name)
     assert not is_uploaded, \
         f"허용 용량 초과 파일 '{file_name}'의 파일 카드가 표시되면 안 됩니다."
-    print("✅ 파일 카드가 나타나지 않음 (정상)")
+    print("파일 카드가 나타나지 않음 (정상)")
     
     # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     has_error_message = upload_page.verify_alert_contains("크기", "용량")
     assert has_error_message, f"'{file_name}' 용량 관련 오류 메시지가 표시되지 않음"
-    print(f"✅ '{file_name}' 파일 업로드 오류 메시지 확인 완료")
+    print(f"'{file_name}' 파일 업로드 오류 메시지 확인 완료")
 
 # [IMG_MDL_TC_004] 경계값 용량 이미지 업로드 시 정상 업로드되는지 확인 (49MB) / (49.9MB)
 @pytest.mark.parametrize(
@@ -140,7 +140,7 @@ def test_004_image_upload_boundary_size_succeeds(driver, file_name):
     # 4. 이미지 파일 업로드 확인
     is_uploaded = upload_page.is_image_uploaded(file_name)
     assert is_uploaded, f"'{file_name}' 파일이 업로드되지 않았습니다."
-    print(f"✅'{file_name}' 파일 업로드 완료")
+    print(f"'{file_name}' 파일 업로드 완료")
     
 # [IMG_MDL_TC_005] 여러 이미지 동시 업로드 시 정상 업로드되는지 확인
 MULTI_IMAGE_FILES = [
@@ -167,13 +167,13 @@ def test_005_image_upload_multiple_files(driver) :
     upload_page = UploadPage(driver)
     upload_page.open_file_upload_dialog()
     upload_page.upload_multiple_files(file_paths_list)
-    print(f"✅ {len(MULTI_IMAGE_FILES)}개 파일 업로드 요청 완료")
+    print(f"{len(MULTI_IMAGE_FILES)}개 파일 업로드 요청 완료")
     
     # 4. 이미지 파일 업로드 확인
     for file_name in MULTI_IMAGE_FILES:
         is_uploaded = upload_page.is_image_uploaded(file_name)
         assert is_uploaded, f"'{file_name}' 파일이 업로드되지 않았습니다."
-        print(f"✅ '{file_name}' 파일 카드 확인 완료")
+        print(f"'{file_name}' 파일 카드 확인 완료")
     print(f"{len(MULTI_IMAGE_FILES)}개 파일 업로드 완료")
 
 # [IMG_MDL_TC_006] 특수문자가 포함된 이미지 파일명 업로드 시 정상 업로드 확인
@@ -197,7 +197,7 @@ def test_006_image_upload_filename_with_special_characters_succeeds(driver):
     # 4. 이미지 파일 업로드 확인
     is_uploaded = upload_page.is_image_uploaded(file_name)
     assert is_uploaded, f"'{file_name}'파일이 업로드되지 않았습니다."
-    print(f"✅ '{file_name}' 파일 업로드 완료")
+    print(f"'{file_name}' 파일 업로드 완료")
 
 # [IMG_MDL_TC_007] 헤더가 손상된 이미지 업로드 시 에러 메시지가 표시되는지 확인
 def test_007_image_upload_corrupted_header_shows_error(driver):
@@ -221,12 +221,12 @@ def test_007_image_upload_corrupted_header_shows_error(driver):
     is_uploaded = upload_page.is_image_uploaded(file_name)
     assert not is_uploaded, \
         f"손상된 파일 '{file_name}'의 파일 카드가 표시되면 안 됩니다."
-    print("✅ 파일 카드가 나타나지 않음 (정상)")
+    print("파일 카드가 나타나지 않음 (정상)")
     
     # 오류 메시지 확인 (오류 메시지가 노출 되어야 함)
     has_error_message = upload_page.verify_alert_contains("손상","잘못된 형식")
     assert has_error_message, f"'{file_name}' 손상 관련 오류 메시지가 표시되지 않음"
-    print(f"✅ '{file_name}' 파일 업로드 오류 메시지 확인 완료")
+    print(f"'{file_name}' 파일 업로드 오류 메시지 확인 완료")
     
     
     

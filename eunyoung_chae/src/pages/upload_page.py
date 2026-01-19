@@ -48,7 +48,7 @@ class UploadPage:
             print("파일 카드가 나타남")
             return file_card.is_displayed()
         except TimeoutException:
-            print(f"❎ '{file_name}' 파일 카드를 찾을 수 없음")
+            print(f"'{file_name}' 파일 카드를 찾을 수 없음")
             return False        
         
     def is_image_uploaded(self, file_name):
@@ -60,7 +60,7 @@ class UploadPage:
             print("파일 카드가 나타남")
             return image_card.is_displayed()
         except TimeoutException:
-            print(f"❎ '{file_name}' 이미지 파일 카드를 찾을 수 없음")
+            print(f"'{file_name}' 이미지 파일 카드를 찾을 수 없음")
             return False
                    
     def verify_alert_contains(self, *expected_texts):
@@ -77,14 +77,14 @@ class UploadPage:
                     found_texts.append(text)
                     
             if found_texts:
-                print(f"✅ Alert에 '{expected_texts}' 포함됨")
+                print(f"Alert에 '{expected_texts}' 포함됨")
                 alert.acccept()
                 return True
             else :
-                print(f"❎ Alert에 '{expected_texts}' 없음")
+                print(f"Alert에 '{expected_texts}' 없음")
                 alert.accept()
                 return False
         
         except TimeoutException:
-            print("⚠️ Alert이 나타나지 않음")
+            print("Alert이 나타나지 않음")
             return False
