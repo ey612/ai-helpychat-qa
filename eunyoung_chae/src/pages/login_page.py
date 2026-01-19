@@ -18,22 +18,19 @@ class LoginPage:
         self.wait = WebDriverWait(driver, 10)
 
     def login (self, PW, user_id=None):
-        '''
+        """"
         - user_id가 있으면 이메일 + 비밀번호 입력
         - user_id가 없으면 비밀번호만 입력
-
-        '''
+        """
         print("로그인 시도")
 
         if user_id:
             print(f"이메일 입력: {user_id}")
-            # email_el = self.wait.until(EC.presence_of_element_located(self.email_input))
             email_el = self.wait.until(EC.presence_of_element_located(self.locators["email_input"]))
             email_el.clear()
             email_el.send_keys(user_id)
         
         print("비밀번호 입력")
-        # pw_el = self.wait.until(EC.presence_of_element_located(self.password_input))
         pw_el = self.wait.until(EC.presence_of_element_located(self.locators["password_input"]))
         pw_el.clear()
         pw_el.send_keys(PW)
