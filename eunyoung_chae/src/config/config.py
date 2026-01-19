@@ -1,6 +1,7 @@
-# === 상수 모음 ===
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-# 로그인 정보
-EMAIL = 'qa3team06@elicer.com'
-PW = 'team06cheerup!'
+EMAIL = os.getenv("TEST_USER_EMAIL")
+PW = os.getenv("TEST_USER_PW")
